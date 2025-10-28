@@ -1,0 +1,85 @@
+---
+title: "Parsing the KEGG ontology"
+author: Zach Reitz
+date: "2025-08-15"
+output:
+  html_document
+---
+
+```{r, eval = FALSE, echo = FALSE}
+# For interactive
+setwd("code/0_databases")
+```
+
+```{r}
+processKEG = function(filepath) {
+  # Initialize data frame
+  df <- data.frame(matrix(ncol = 4, nrow = 100000))
+  colnames(df) <- LETTERS[1:4]
+  # Initialize the description lookup tables
+  lookup <- lapply(character(4), function(x) character(0))
+  names(lookup) <- LETTERS[1:4]
+
+  # The row object will store the latest A to D
+  row <- character(4)
+  names(row) <- LETTERS[1:4]
+
+  i = 1
+
+  # Read line by line
+  con = file(filepath, "r")
+  while ( TRUE ) {
+    if (i %% 1000 == 0) {
+      print(i)
+    }
+
+    line = readLines(con, n = 1)
+    if ( length(line) == 0 ) {
+      break
+    }
+
+    # Extract info from the line
+    level <- substr(line, 1, 1)
+    if (! level %in% LETTERS[1:4]) next
+    code <- regmatches(line, regexpr("K?[0-9]{5}", line))
+    desc <- sub(".*[0-9]{5} +", "", line)
+    if (length(code) == 0) next
+
+    # Stop when reaching the irrelevant categories
+    if (code == "09150") break
+
+    # Add the code to the row object
+    row[level] <- code
+    # Add the description to the correct lookup table
+    lookup[[level]][code] <- desc
+
+    if (level == "D") {
+      df[i, ] <- row
+      i <- i + 1
+    }
+  }
+  close(con)
+
+  df <- df[rowSums(is.na(df)) == 0, ]
+  return(list(df = df, lookup = lookup))
+}
+```
+
+```{r}
+kegfile <- "input/ko00001.keg"
+parsed <- processKEG(kegfile)
+
+saveRDS(parsed$df, 'output/kegg_ontology.Rda')
+write.csv(parsed$df, "output/kegg_ontology.csv", row.names = F)
+
+# convert to df
+lookup <- stack(parsed$lookup)
+names(lookup) <- c("Description", "Level")
+
+saveRDS(lookup, 'output/kegg_lookup.Rda')
+write.csv(lookup, "output/kegg_lookup.csv")
+```
+
+```{r}
+sessionInfo()
+```

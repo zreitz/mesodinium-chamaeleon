@@ -1,0 +1,15 @@
+,sample,description,replicate,display,treatment
+2a,2a,24hr_PostFeeding,a,1 d,1d
+2b,2b,24hr_PostFeeding,b,1 d,1d
+2c,2c,24hr_PostFeeding,c,1 d,1d
+3a,3a,48hr_PostFeeding,a,2 d,2d
+3b,3b,48hr_PostFeeding,b,2 d,2d
+3c,3c,48hr_PostFeeding,c,2 d,2d
+4a,4a,7day_PostFeeding,a,7 d,7d
+4b,4b,7day_PostFeeding,b,7 d,7d
+5a,5a,96hr_PostFeeding,a,4 d,4d
+5b,5b,96hr_PostFeeding,b,4 d,4d
+5c,5c,96hr_PostFeeding,c,4 d,4d
+7a,7a,Starved,a,Starved,Starved
+7b,7b,Starved,b,Starved,Starved
+7c,7c,Starved,c,Starved,Starved

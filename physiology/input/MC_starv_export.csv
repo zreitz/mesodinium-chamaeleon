@@ -1,0 +1,235 @@
+Expt,Sample,Species,TreatNum,Light,Treatment,ShortTreat,Feeding,Rep,Day,CellCount,ChlpCell,Fv.Fm,Pmax,Pmax.err,Pmax.p,a,a.err,a.p,Ek,P_I,P_I.C,CryptoCount
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,A,-8,18400.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,B,-8,14785.7,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,C,-8,17416.7,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,D,-8,15666.7,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,E,-8,17083.3,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,F,-8,14833.3,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,A,-7,19800.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,B,-7,21500.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,C,-7,22000.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,D,-7,23600.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,E,-7,20083.3,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,F,-7,20083.3,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,A,-6,20500.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,B,-6,25500.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,C,-6,20800.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,D,-6,22900.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,E,-6,20500.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,F,-6,19400.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,A,-4,22875.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,B,-4,23600.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,C,-4,22300.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,D,-4,21500.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,E,-4,22100.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,F,-4,21000.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,A,-2,23000.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,B,-2,24500.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,C,-2,25400.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,D,-2,22000.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,E,-2,21600.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,F,-2,20000.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,A,-1,20916.7,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,B,-1,21600.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,C,-1,23000.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,D,-1,19833.3,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,E,-1,20300.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,F,-1,18833.3,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,A,0,20200.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,B,0,23900.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,C,0,22333.3,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,D,0,23600.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,E,0,17916.7,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,F,0,16500.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,A,1,22666.7,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,B,1,22000.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,C,1,22100.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,D,1,20500.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,E,1,18900.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,F,1,20166.7,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,A,3,18100.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,B,3,18250.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,C,3,16083.3,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,D,3,16500.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,E,3,15583.3,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,F,3,18416.7,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,A,5,17166.7,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,B,5,18250.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,C,5,19083.3,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,D,5,16583.3,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,E,5,17166.7,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,F,5,14500.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,A,6,16000.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,B,6,16750.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,C,6,17583.3,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,D,6,15900.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,E,6,15900.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,F,6,14600.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,A,7,18100.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,B,7,15100.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,C,7,13500.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,D,7,17600.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,E,7,17100.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",,starved,F,7,14700.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",starved,starved,A,8,17600.0,10.6023,0.221,62.51360432,0.61660667,2.83E-26,1.212668293,0.036080644,1.07E-17,51.5504567,11.97682884,0.206980921,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",starved,starved,B,8,15000.0,12.2324,0.257,60.17736626,0.569914446,1.36E-26,1.082803238,0.029094885,1.76E-18,55.57553226,10.7126675,0.185133963,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",starved,starved,C,8,14583.3,9.9802,0.247,65.0166539,0.876592195,7.75E-24,1.038111102,0.035624744,1.34E-16,62.62976458,10.29378267,0.177894888,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",starved,starved,D,8,13833.3,10.9182,0.246,72.04905736,1.139209804,1.35E-22,1.12608866,0.04438093,1.53E-15,63.98169159,11.17008001,0.193038865,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",starved,starved,E,8,13916.7,12.4161,0.245,72.04785827,1.081922591,5.36E-23,1.08281699,0.038956093,3.08E-16,66.53742868,10.74737277,0.185733732,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, starved",starved,starved,F,8,12000.0,12.0743,0.253,72.6291399,1.577579411,3.96E-20,0.984213719,0.045761575,2.74E-14,73.79407391,9.782330872,0.16905609,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 24h post-feeding",,fed,A,8.2,11500.0,,,,,,,,,,,,101250
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 24h post-feeding",,fed,B,8.2,10250.0,,,,,,,,,,,,107000
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 24h post-feeding",,fed,C,8.2,12250.0,,,,,,,,,,,,94666.66667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 24h post-feeding",,fed,D,8.2,10833.3,,,,,,,,,,,,109666.6667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 24h post-feeding",,fed,E,8.2,11916.7,,,,,,,,,,,,114666.6667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 24h post-feeding",,fed,F,8.2,8833.3,,,,,,,,,,,,106333.3333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 24h post-feeding",fed24,fed,A,9,10000.0,43.2346,0.448,63.00400613,0.537335857,2.07E-27,1.115406488,0.02661656,2.12E-19,56.48524266,11.0389764,0.190773162,49000
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 24h post-feeding",fed24,fed,B,9,10083.3,44.4767,0.453,64.13541991,0.657464757,5.66E-26,1.063875675,0.028782686,1.98E-18,60.28469435,10.54224011,0.182188674,47750
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 24h post-feeding",fed24,fed,C,9,8583.3,47.3427,0.452,70.40147481,0.880297251,2.01E-24,1.024901232,0.02969353,6.69E-18,68.69098466,10.17721711,0.175880427,41250
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 24h post-feeding",fed24,fed,D,9,9666.7,47.3360,0.463,66.89441157,0.707044626,9.80E-26,1.035470446,0.027018687,1.04E-18,64.60291729,10.2727882,0.177532066,46250
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 24h post-feeding",fed24,fed,E,9,8166.7,56.8178,0.462,74.47712999,0.76621063,6.03E-26,1.044694233,0.023917629,1.01E-19,71.29084055,10.37895999,0.179366903,55750
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 24h post-feeding",fed24,fed,F,9,8916.7,61.8000,0.456,71.72928593,0.686441401,1.64E-26,1.061391347,0.023944191,7.79E-20,67.58043216,10.53711976,0.182100186,66000
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 48h post-feeding",fed48,fed,A,10,14000.0,42.3633,0.467,40.61440877,0.483543641,8.32E-25,1.492863191,0.075285059,1.12E-13,27.20571384,14.29075864,0.246969747,12500
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 48h post-feeding",fed48,fed,B,10,12166.7,40.3869,0.507,38.72920497,0.230274803,3.16E-30,1.231991558,0.029429899,2.16E-19,31.43625839,11.92052227,0.206007843,14600
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 48h post-feeding",fed48,fed,C,10,12750.0,33.0017,0.509,46.89712969,0.268171158,1.56E-30,1.158799492,0.023541687,1.20E-20,40.47044377,11.35777911,0.19628264,13200
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 48h post-feeding",fed48,fed,D,10,13000.0,37.3660,0.477,52.07315315,0.259399131,1.31E-31,1.225587819,0.021069654,6.05E-22,42.48830834,12.03448261,0.207977281,23500
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 48h post-feeding",fed48,fed,E,10,10714.3,48.3191,0.504,50.80603967,0.267499959,3.54E-31,1.148603922,0.020346694,1.03E-21,44.23286279,11.29427313,0.195185144,17700
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 48h post-feeding",fed48,fed,F,10,8428.6,49.7339,0.512,50.97919603,0.473758322,9.70E-27,1.059921029,0.031296828,9.38E-18,48.09716443,10.44907956,0.180578694,32875
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 96h post-feeding",,fed,A,11,20166.7,,,,,,,,,,,,1866.666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 96h post-feeding",,fed,B,11,18583.3,,,,,,,,,,,,2125
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 96h post-feeding",,fed,C,11,21916.7,,,,,,,,,,,,2162.5
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 96h post-feeding",,fed,D,11,16250.0,,,,,,,,,,,,3783.333333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 96h post-feeding",,fed,E,11,17000.0,,,,,,,,,,,,3533.333333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 96h post-feeding",,fed,F,11,13083.3,,,,,,,,,,,,5383.333333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 96h post-feeding",fed96,fed,A,12,21916.7,21.0079,0.507,33.45475521,0.414006331,1.66E-24,1.390967328,0.07575974,4.19E-13,24.05143135,13.15995339,0.227427419,233.3333333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 96h post-feeding",fed96,fed,B,12,21000.0,21.3367,0.51,42.41883513,0.174112682,4.01E-33,1.272521205,0.020472643,1.84E-22,33.33448194,12.3567404,0.213546469,400
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 96h post-feeding",fed96,fed,C,12,22166.7,18.8408,0.513,41.58541803,0.180086409,1.05E-32,1.211151567,0.020286229,3.79E-22,34.33543675,11.78030297,0.203584604,233.3333333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 96h post-feeding",fed96,fed,D,12,20083.3,24.5702,0.513,42.27807268,0.278574063,2.00E-29,1.164042333,0.028879471,4.25E-19,36.32004738,11.35493651,0.196233515,600
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 96h post-feeding",fed96,fed,E,12,17833.3,25.0969,0.516,43.03626928,0.294354724,3.92E-29,1.171105256,0.029982824,7.43E-19,36.74842125,11.43029931,0.197535918,800
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 96h post-feeding",fed96,fed,F,12,16571.4,25.9412,0.499,42.28846546,0.385932419,7.00E-27,1.15358082,0.039456201,1.26E-16,36.65843323,11.257936,0.194557173,616.6666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",,fed,A,13,24750.0,,,,,,,,,,,,50
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",,fed,B,13,21833.3,,,,,,,,,,,,75
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",,fed,C,13,24250.0,,,,,,,,,,,,12.5
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",,fed,D,13,25333.3,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",,fed,E,13,25500.0,,,,,,,,,,,,100
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",,fed,F,13,26200.0,,,,,,,,,,,,116.6666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",,fed,A,14,27600.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",,fed,B,14,25200.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",,fed,C,14,29100.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",,fed,D,14,23083.3,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",,fed,E,14,24500.0,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",,fed,F,14,24916.7,,,,,,,,,,,,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",fed168,fed,A,15,29250.0,14.3180,0.447,39.82112237,0.230676764,1.97E-30,1.234819189,0.028438556,1.13E-19,32.24854515,11.96705736,0.206812053,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",fed168,fed,B,15,23666.7,11.5521,0.453,43.52698169,0.269387836,6.49E-30,1.245146991,0.029558171,1.93E-19,34.95730383,12.12258735,0.209499888,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",fed168,fed,C,15,27916.7,13.7761,0.469,47.99420776,0.413542043,2.49E-27,1.206029198,0.037275621,2.11E-17,39.79522872,11.81269541,0.204144403,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",fed168,fed,D,15,27833.3,13.9697,0.477,48.47687861,0.493135288,4.93E-26,1.097472055,0.037595098,1.30E-16,44.17140134,10.79099122,0.186487536,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",fed168,fed,E,15,26583.3,14.1843,0.479,46.31715773,0.808163248,7.89E-22,1.096216314,0.066236711,2.46E-12,42.25184132,10.76196373,0.18598589,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, 7d post-feeding",fed168,fed,F,15,25833.3,15.0787,0.461,45.13145269,0.928607985,1.51E-20,1.038245471,0.072680707,2.91E-11,43.46896178,10.20309501,0.176327643,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,A,12.2,11000.0,,,,,,,,,,,,34250
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,B,12.2,11285.7,,,,,,,,,,,,52000
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,C,12.2,9250.0,,,,,,,,,,,,51750
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,D,12.2,11750.0,,,,,,,,,,,,41400
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,E,12.2,8333.3,,,,,,,,,,,,46600
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,F,12.2,8357.1,,,,,,,,,,,,43750
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,A,13,13083.3,,,,,,,,,,,,6200
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,B,13,11500.0,,,,,,,,,,,,7400
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,C,13,11000.0,,,,,,,,,,,,4100
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,D,13,9250.0,,,,,,,,,,,,3583.333333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,E,13,10333.3,,,,,,,,,,,,7325
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,F,13,10500.0,,,,,,,,,,,,9300
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,A,14,17666.7,,,,,,,,,,,,750
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,B,14,16916.7,,,,,,,,,,,,2316.666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,C,14,21250.0,,,,,,,,,,,,1133.333333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,D,14,18583.3,,,,,,,,,,,,516.6666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,E,14,15083.3,,,,,,,,,,,,550
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,F,14,16333.3,,,,,,,,,,,,1716.666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,A,15.2,2162.5,,,,,,,,,,,,4266.666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,B,15.2,1687.5,,,,,,,,,,,,2566.666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,C,15.2,1487.5,,,,,,,,,,,,3400
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,D,15.2,2062.5,,,,,,,,,,,,3616.666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,E,15.2,1937.5,,,,,,,,,,,,3400
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,F,15.2,1937.5,,,,,,,,,,,,2950
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,A,16,3950.0,,,,,,,,,,,,1575
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,B,16,3150.0,,,,,,,,,,,,825
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,C,16,3483.3,,,,,,,,,,,,900
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,D,16,3960.0,,,,,,,,,,,,1087.5
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,E,16,2700.0,,,,,,,,,,,,1266.666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,F,16,3400.0,,,,,,,,,,,,875
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,A,17,6566.7,,,,,,,,,,,,4933.333333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,B,17,5433.3,,,,,,,,,,,,5383.333333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,C,17,4900.0,,,,,,,,,,,,7833.333333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,D,17,5283.3,,,,,,,,,,,,7100
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,E,17,4400.0,,,,,,,,,,,,3966.666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,F,17,4483.3,,,,,,,,,,,,4733.333333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,A,18,9250.0,,,,,,,,,,,,1633.333333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,B,18,7250.0,,,,,,,,,,,,2500
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,C,18,7785.7,,,,,,,,,,,,5516.666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,D,18,,,,,,,,,,,,,6166.666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,E,18,8500.0,,,,,,,,,,,,2883.333333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,F,18,8562.5,,,,,,,,,,,,4366.666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,A,19,12750.0,,,,,,,,,,,,3100
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,B,19,11166.7,,,,,,,,,,,,2350
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,C,19,10750.0,,,,,,,,,,,,3583.333333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,D,19,10083.3,,,,,,,,,,,,4666.666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,E,19,12250.0,,,,,,,,,,,,4200
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,F,19,11500.0,,,,,,,,,,,,3700
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,A,20,19000.0,,,,,,,,,,,,737.5
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,B,20,15071.4,,,,,,,,,,,,416.6666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,C,20,16000.0,,,,,,,,,,,,366.6666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,D,20,16750.0,,,,,,,,,,,,587.5
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,E,20,15500.0,,,,,,,,,,,,400
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",,wellfed,F,20,14000.0,,,,,,,,,,,,483.3333333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",wellfed,wellfed,A,21,30714.3,26.5710,0.525,85.06536511,0.98505372,5.05E-25,1.102488961,0.025940082,1.65E-19,77.15756633,10.96357161,0.189470033,6550
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",wellfed,wellfed,B,21,26714.3,27.8000,0.51,102.3754703,0.966749832,1.29E-26,1.123739637,0.017408888,9.37E-23,91.10248227,11.19248088,0.193425992,4966.666667
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",wellfed,wellfed,C,21,23000.0,28.5478,0.51,113.5824814,1.724641791,6.54E-23,1.106083542,0.023179564,2.09E-20,102.6888812,11.02600365,0.190548969,4600
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",wellfed,wellfed,D,21,22833.3,24.9798,0.52,117.274387,1.726231817,3.74E-23,1.105167625,0.021358282,4.91E-21,106.1145697,11.0190763,0.190429252,6300
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",wellfed,wellfed,E,21,26333.3,27.1765,0.514,120.7858589,2.033725816,4.17E-22,1.10818498,0.023501685,2.59E-20,108.9943115,11.05085966,0.190978525,4333.333333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, well-fed",wellfed,wellfed,F,21,22333.3,31.1610,0.526,128.4120511,1.783537075,1.32E-23,1.107746182,0.017568657,1.43E-22,115.9219081,11.05006519,0.190964796,5383.333333
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, super starved",superstarved,starved,A,21,4412.5,7.2204,0.226,41.73992831,0.759502533,1.67E-21,1.048640194,0.068436385,9.02E-12,39.80386081,10.27120824,0.177504761,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, super starved",superstarved,starved,B,21,3862.5,8.1346,0.205,37.35850979,0.908403162,2.97E-19,1.012215081,0.091928291,1.99E-09,36.9076795,9.881518971,0.170770237,0
+3,,M chamaeleon NRMC1802 (fed SM),,10,"10uE, light, super starved",superstarved,starved,C,21,3012.5,10.0183,0.24,37.55948176,0.852278665,8.65E-20,0.87496759,0.068084624,1.66E-10,42.92671201,8.594761651,0.14853278,0
+4,,M chamaeleon NRMC1802 (fed SM),,10,"10uE,light, control",nutctrl,starved,A,0,13525,11.6858,0.483,70.1080311,1.365150609,2.12E-16,1.492213984,0.088448842,3.21E-10,46.9825587,14.70081064,,0
+4,,M chamaeleon NRMC1802 (fed SM),,10,"10uE,light, control",nutctrl,starved,B,0,13675,11.4095064,0.497,68.66933105,0.673810735,2.93E-20,1.338866086,0.037905691,2.66E-14,51.28917056,13.22154732,,0
+4,,M chamaeleon NRMC1802 (fed SM),,10,"10uE,light, control",nutctrl,starved,C,0,13500,10.86481481,0.486,83.15268377,0.643302081,1.34E-21,1.313295751,0.025021507,1.60E-16,63.31603808,13.02483838,,0
+4,,M chamaeleon NRMC1802 (fed SM),8,10,"10uE, light, NH4+",NH4,starved,A,0,8775,15.56125356,0.51,73.93539625,0.542500439,6.72E-22,1.206030797,0.022396325,1.15E-16,61.30473323,11.95446747,,0
+4,,M chamaeleon NRMC1802 (fed SM),8,10,"10uE, light, NH4+",NH4,starved,B,0,9850,14.96446701,0.509,70.42473501,0.569744685,2.39E-21,1.177571055,0.02460199,5.27E-16,59.80508326,11.66717794,,0
+4,,M chamaeleon NRMC1802 (fed SM),8,10,"10uE, light, NH4+",NH4,starved,C,0,9200,14.32608696,0.514,69.31094041,0.562629886,2.50E-21,1.209947212,0.026227727,8.49E-16,57.28426806,11.97804566,,0
+4,,M chamaeleon NRMC1802 (fed SM),9,100,"100uE, light, starved",100uE,starved,A,0,12150,13.08641975,0.494,82.41439837,0.807921939,2.90E-20,1.315587003,0.032053157,3.84E-15,62.64458237,13.04525158,,0
+4,,M chamaeleon NRMC1802 (fed SM),9,100,"100uE, light, starved",100uE,starved,B,0,10800,14.38888889,0.488,74.53085388,1.306888248,5.46E-17,1.358178852,0.065631254,2.47E-11,54.87558119,13.43341804,,0
+4,,M chamaeleon NRMC1802 (fed SM),9,100,"100uE, light, starved",100uE,starved,C,0,12575,13.59045726,0.493,82.04479795,0.631618183,1.25E-21,1.334012411,0.025922391,2.07E-16,61.50227483,13.22379503,,0
+4,,M chamaeleon NRMC1802 (fed SM),,10,"10uE,light, control",nutctrl,starved,A,1,15175,9.6326,0.475,90.58967642,0.566566419,7.84E-30,1.340357997,0.019759314,3.85E-23,67.58617966,13.30661884,,0
+4,,M chamaeleon NRMC1802 (fed SM),,10,"10uE,light, control",nutctrl,starved,B,1,15150,10.45874587,0.484,98.67662276,0.971628419,2.74E-26,1.242447181,0.024002087,4.88E-21,79.42118127,12.35922807,,0
+4,,M chamaeleon NRMC1802 (fed SM),,10,"10uE,light, control",nutctrl,starved,C,1,14575,9.922813036,0.485,80.83082579,0.492077928,4.82E-30,1.306299947,0.020477849,1.16E-22,61.87769202,12.95045077,,0
+4,,M chamaeleon NRMC1802 (fed SM),8,10,"10uE, light, NH4+",NH4,starved,A,1,9400,16.62234043,0.533,95.0151963,0.922316752,2.12E-26,1.16309944,0.021388324,2.02E-21,81.69137828,11.57324493,,0
+4,,M chamaeleon NRMC1802 (fed SM),8,10,"10uE, light, NH4+",NH4,starved,B,1,12175,13.45790554,0.534,99.81049268,1.071559046,1.30E-25,1.189901066,0.023398717,6.70E-21,83.88133728,11.84295789,,0
+4,,M chamaeleon NRMC1802 (fed SM),8,10,"10uE, light, NH4+",NH4,starved,C,1,9050,16.28453039,0.542,98.18130851,1.45299664,4.12E-23,1.121683304,0.028752919,7.60E-19,87.53032889,11.16828513,,0
+4,,M chamaeleon NRMC1802 (fed SM),9,100,"100uE, light, starved",100uE,starved,A,1,12675,10.45364892,0.469,72.92016466,0.761580762,4.02E-21,1.259270934,0.02695034,8.95E-17,57.90665272,12.46900308,,0
+4,,M chamaeleon NRMC1802 (fed SM),9,100,"100uE, light, starved",100uE,starved,B,1,12475,10.73346693,0.463,68.25792792,0.815710988,8.89E-25,1.329983315,0.048109032,3.39E-16,51.32239414,13.13403999,,0
+4,,M chamaeleon NRMC1802 (fed SM),9,100,"100uE, light, starved",100uE,starved,C,1,13025,10.76391555,0.465,83.13408218,0.827563871,3.34E-26,1.21535777,0.028157902,1.25E-19,68.40297089,12.06772848,,0
+4,,M chamaeleon NRMC1802 (fed SM),,10,"10uE,light, control",nutctrl,starved,A,2,16200,7.9198,0.483,52.09906196,0.823017377,1.33E-22,1.44548655,0.086305058,2.01E-12,36.04257815,14.09503739,,0
+4,,M chamaeleon NRMC1802 (fed SM),,10,"10uE,light, control",nutctrl,starved,B,2,16275,9.168970814,0.468,60.75766129,0.663094291,3.26E-17,1.386474051,0.030675439,7.60E-14,43.82170818,13.62898557,,0
+4,,M chamaeleon NRMC1802 (fed SM),,10,"10uE,light, control",nutctrl,starved,C,2,16850,8.256676558,0.478,61.75891054,0.490398555,2.09E-25,1.357115331,0.031978939,7.13E-18,45.50748867,13.35685278,,0
+4,,M chamaeleon NRMC1802 (fed SM),8,10,"10uE, light, NH4+",NH4,starved,A,2,12225,13.52965235,0.525,86.01096964,1.386648853,1.91E-22,1.141139781,0.038428145,9.60E-17,75.37286058,11.3449102,,0
+4,,M chamaeleon NRMC1802 (fed SM),8,10,"10uE, light, NH4+",NH4,starved,B,2,13750,13.01818182,0.525,83.61939035,0.527343762,9.10E-30,1.243096967,0.01857042,4.88E-23,67.26698926,12.34019643,,0
+4,,M chamaeleon NRMC1802 (fed SM),8,10,"10uE, light, NH4+",NH4,starved,C,2,11175,14.14541387,0.528,86.86544066,0.668687494,3.29E-28,1.232067264,0.021365872,7.07E-22,70.50381356,12.23871159,,0
+4,,M chamaeleon NRMC1802 (fed SM),9,100,"100uE, light, starved",100uE,starved,A,2,14725,8.295415959,0.423,53.740102,0.39546097,3.00E-23,1.341164573,0.028270618,7.25E-17,40.06972975,13.13997423,,0
+4,,M chamaeleon NRMC1802 (fed SM),9,100,"100uE, light, starved",100uE,starved,B,2,15500,7.251612903,0.421,56.30593641,0.838484493,4.63E-22,1.381579423,0.069425953,3.25E-13,40.75475899,13.54504584,,0
+4,,M chamaeleon NRMC1802 (fed SM),9,100,"100uE, light, starved",100uE,starved,C,2,16025,7.313572543,0.42,55.76127844,0.609804237,1.81E-25,1.296845215,0.048583982,6.28E-16,42.99763596,12.73958469,,0
+4,,M chamaeleon NRMC1802 (fed SM),,10,"10uE,light, control",nutctrl,starved,A,3,,,0.455,68.5200648,1.085319627,1.65E-16,1.327060313,0.040005866,3.57E-13,51.63296962,13.10712916,,0
+4,,M chamaeleon NRMC1802 (fed SM),,10,"10uE,light, control",nutctrl,starved,B,3,,,0.454,71.89299371,0.692061817,1.83E-26,1.226080846,0.031950016,1.02E-18,58.63642186,12.14330781,,0
+4,,M chamaeleon NRMC1802 (fed SM),,10,"10uE,light, control",nutctrl,starved,C,3,,,0.461,71.72397841,0.533193017,1.75E-28,1.275429556,0.026630656,1.96E-20,56.23515474,12.62153732,,0
+4,,M chamaeleon NRMC1802 (fed SM),8,10,"10uE, light, NH4+",NH4,starved,A,3,,,0.521,89.31416423,0.614962379,4.42E-29,1.214142381,0.017959571,4.09E-23,73.56152427,12.06718197,,0
+4,,M chamaeleon NRMC1802 (fed SM),8,10,"10uE, light, NH4+",NH4,starved,B,3,,,0.516,87.7674519,0.847836461,4.80E-24,1.200603532,0.021507707,9.13E-20,73.10277672,11.93170392,,0
+4,,M chamaeleon NRMC1802 (fed SM),8,10,"10uE, light, NH4+",NH4,starved,C,3,,,0.516,87.38029311,1.026032142,8.25E-24,1.230035316,0.030052883,1.99E-18,71.03884903,12.21974555,,0
+4,,M chamaeleon NRMC1802 (fed SM),9,100,"100uE, light, starved",100uE,starved,A,3,,,0.335,66.67204319,1.416872451,2.68E-20,1.312322313,0.085079112,8.07E-12,50.80462514,12.95633124,,0
+4,,M chamaeleon NRMC1802 (fed SM),9,100,"100uE, light, starved",100uE,starved,B,3,,,0.357,57.95847535,0.647648124,2.66E-25,1.29951463,0.048593544,6.08E-16,44.60009453,12.78167285,,0
+4,,M chamaeleon NRMC1802 (fed SM),9,100,"100uE, light, starved",100uE,starved,C,3,,,0.356,74.25638777,1.026292196,1.21E-23,1.212081804,0.043548615,3.01E-16,61.2635117,12.01430483,,0
+4,,M chamaeleon NRMC1802 (fed SM),,10,"10uE,light, control",nutctrl,starved,A,4,,,0.437,44.42323968,0.237645169,4.72E-31,1.382738375,0.029454939,2.80E-20,32.12700283,13.39747829,,0
+4,,M chamaeleon NRMC1802 (fed SM),,10,"10uE,light, control",nutctrl,starved,B,4,,,0.443,61.71171084,0.52321689,1.86E-27,1.290186486,0.034894118,1.97E-18,47.83162086,12.7171188,,0
+4,,M chamaeleon NRMC1802 (fed SM),,10,"10uE,light, control",nutctrl,starved,C,4,,,0.457,65.12572781,0.640086975,2.65E-26,1.281805483,0.038431124,1.23E-17,50.80780875,12.65506396,,0
+4,,M chamaeleon NRMC1802 (fed SM),8,10,"10uE, light, NH4+",NH4,starved,A,4,,,0.511,68.74282193,0.469465491,3.81E-29,1.265004856,0.02497716,7.21E-21,54.34194313,12.50916563,,0
+4,,M chamaeleon NRMC1802 (fed SM),8,10,"10uE, light, NH4+",NH4,starved,B,4,,,0.493,66.9097131,0.511345798,2.88E-28,1.26822467,0.028705445,8.27E-20,52.75856454,12.53252201,,0
+4,,M chamaeleon NRMC1802 (fed SM),8,10,"10uE, light, NH4+",NH4,starved,C,4,,,0.501,80.66674828,0.972175118,1.03E-24,1.169523731,0.032514956,3.22E-18,68.97401577,11.61397655,,0
+4,,M chamaeleon NRMC1802 (fed SM),9,100,"100uE, light, starved",100uE,starved,A,4,,,0.228,75.18625933,1.179226525,1.17E-22,1.229638336,0.050226858,2.86E-15,61.1450189,12.18791258,,0
+4,,M chamaeleon NRMC1802 (fed SM),9,100,"100uE, light, starved",100uE,starved,B,4,,,0.234,73.12974862,1.17351721,1.76E-22,1.175222402,0.04830141,3.19E-15,62.22630585,11.65208855,,0
+4,,M chamaeleon NRMC1802 (fed SM),9,100,"100uE, light, starved",100uE,starved,C,4,,,0.246,84.08660818,1.625474732,4.94E-21,1.131150772,0.046413679,3.10E-15,74.33722387,11.24376627,,0

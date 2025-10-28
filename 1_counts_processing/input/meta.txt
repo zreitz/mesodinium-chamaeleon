@@ -1,0 +1,14 @@
+2a	MC_24hr_PostFeeding
+2b	MC_24hr_PostFeeding
+2c	MC_24hr_PostFeeding
+3a	MC_48hr_PostFeeding
+3b	MC_48hr_PostFeeding
+3c	MC_48hr_PostFeeding
+4a	MC_7day_PostFeeding
+4b	MC_7day_PostFeeding
+5a	MC_96hr_PostFeeding
+5b	MC_96hr_PostFeeding
+5c	MC_96hr_PostFeeding
+7a	MC_Starved
+7b	MC_Starved
+7c	MC_Starved

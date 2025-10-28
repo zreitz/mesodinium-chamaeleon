@@ -1,0 +1,138 @@
+---
+title: "Physiology plots"
+author: Zach Reitz
+date: "2025-08-29"
+output:
+  html_document
+---
+
+```{r, eval = FALSE, echo = FALSE}
+# For interactive
+setwd("code/physiology")
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(cowplot)
+library(grid)
+library(gridExtra)
+library(scales)
+library(khroma)
+
+library(Rmisc)  # For summarySE
+library(ggpubr) # For stat_reg_line_equation (regression on plot)
+library(ggpmisc) # R2 on plot
+library(ggnewscale) # For second color scale
+
+color_scheme = c('#FFF7ECFF', '#7F0000FF', '#D7301FFF', '#FC8D59FF', '#FDD49EFF')
+```
+
+## Load data
+```{r}
+physiology_all <- read.csv("output/physiology-all.csv")
+physiology_paired <- read.csv("output/physiology-paired.csv")
+```
+
+```{r}
+stats <- c(
+  "ChlpCell" = "Chlorophyll (pg/cell)", 
+  "Fv.Fm" = "Fv/Fm", 
+  "P_I.cell" = "Photosynthetic Rate (pg C cell^-1 h^-1)", 
+  "mu" = "Growth rate (d^-1)"
+)
+
+treatments <- c(
+  "starved" = "Starved",
+  "fed24" = "1 d",
+  "fed48" = "2 d",
+  "fed96" = "4 d",
+  "fed168" = "7 d"
+)
+
+si_stats <- c(
+  "P_I" = "Photosynthetic Rate (pg C h^-1)"
+)
+
+# Get relevant rows/columns
+physiology <- subset(physiology_paired, ShortTreat %in% names(treatments), select = c("ShortTreat", names(stats)))
+physiology$treatment <- factor(treatments[physiology$ShortTreat], levels = treatments)
+```
+
+```{r}
+aggregate(.~treatment, subset(physiology, select = -ShortTreat), mean)
+```
+
+## Physiology bar plots
+```{r}
+df <- reshape2::melt(subset(physiology, select = -ShortTreat), id.vars = "treatment", value.name = "value")
+df$treatment <- factor(df$treatment, levels = treatments)
+df$stat <- factor(stats[as.character(df$variable)], levels = stats)
+
+# Repeat starved at the end
+#starved <- df[df$treatment == "Starved", ]
+#starved$treatment <- "Starved "
+#df <- rbind(df, starved)
+
+barplt <- ggplot(df, aes(x = treatment, y = value, fill = treatment)) +
+  stat_summary(fun.data = "mean_se", geom = "bar", color = "black", size = 0.2) +
+  stat_summary(fun.data = "mean_se", geom = "errorbar", width = 0.2) +
+  geom_hline(yintercept = 0, color = "black", linewidth = 0.2) +
+  facet_wrap(vars(stat), scales = "free", nrow = 2) +
+  scale_fill_manual(values = color_scheme) +
+  labs(x = "Treatment", y = NULL) +
+  theme_bw() +
+  theme(legend.position = "none")
+
+barplt
+```
+
+# Correlations between physiology
+```{r}
+centroids <- aggregate(cbind(P_I.cell, mu)~treatment, physiology, mean)
+centroids <- centroids[match(treatments, centroids$treatment),]
+
+segments <- cbind(centroids[1:4, 2:3], centroids[2:5, 2:3])
+colnames(segments) <- c("x", "y", "xend", "yend")
+arrows <- segments
+arrows$xend <- rowMeans(arrows[, c("x", "xend")])
+arrows$yend <- rowMeans(arrows[, c("y", "yend")])
+
+biplt <- ggplot(physiology, aes(
+          x = P_I.cell, y = mu, fill = treatment, 
+          shape = treatment
+    )) +
+  # small points
+  geom_point(size = 1.5, alpha = 0.8) +
+  # Connecting arrows
+  geom_segment(data = arrows, inherit.aes = F,
+               aes(x = x, y = y, xend = xend, yend = yend), 
+               color = "#333333",
+               arrow = arrow(
+                length = unit(0.2, "cm")
+                )) +
+  geom_segment(data = segments, inherit.aes = F,
+               color = "#333333",
+               aes(x = x, y = y, xend = xend, yend = yend)) +
+  # centroids
+  geom_point(data = centroids, size = 3, color = "black") +
+
+  scale_shape_manual(values = 21:25) +
+  scale_fill_manual(values = color_scheme) +
+  theme_bw() +
+  labs(x = "Photosynthetic Rate (pg C cell^-1 h^-1)", 
+       y = "Growth rate (d^-1)",
+       color = "Treatment", fill = "Treatment", shape = "Treatment") +
+  theme(legend.position = "inside",
+        legend.position.inside = c(0.15, 0.7))  # For vertical layout
+
+biplt
+```
+
+```{r, fig.width = 5, fig.height = 8}
+plot_grid(barplt, biplt, labels = c("A", "B"), nrow = 2)
+```
+
+
+```{r}
+sessionInfo()
+```

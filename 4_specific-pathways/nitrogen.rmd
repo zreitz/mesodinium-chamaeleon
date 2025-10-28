@@ -1,0 +1,86 @@
+---
+title: "Nitrogen uptake"
+author: Zach Reitz
+date: "2025-08-15"
+output:
+  html_document: default
+---
+
+```{r, eval = FALSE, echo = FALSE}
+# For interactive
+setwd("code/4_specific-pathways")
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(DESeq2)
+library(Rmisc)
+library(cowplot)
+library(scales)
+library(grid)
+library(gridExtra)
+library(ggrepel)
+library(khroma)
+library(data.table)
+library(ggbeeswarm)
+```
+
+## Load data
+```{r}
+dds <- readRDS( "../1_counts_processing/output/deseq_datasets.Rda")
+metadata <- readRDS( "../1_counts_processing/output/metadata.Rda")
+kegg_ontology <- readRDS( "../0_databases/output/kegg_ontology.Rda")
+kegg_lookup <- readRDS( "../0_databases/output/kegg_lookup.Rda")
+
+timeseries <- c("Starved", "1d", "2d", "4d", "7d", "Starved ")
+
+kn_counts <- assay(rlog(dds[[2]], blind = FALSE))
+```
+
+## Get nitrogen uptake genes
+```{r}
+nitrogen <- c(
+  "Ammonia transporter" = "K03320",
+  "Nitrate transporter" = "K02575",
+  "Nitrate reductase" = "K10534",
+  "Nitrite reductase" = "K00366"
+)
+
+n_counts <- subset(kn_counts, rownames(kn_counts) %in% nitrogen)
+```
+
+## Plot counts
+```{r}
+df <- reshape2::melt(as.matrix(n_counts))
+colnames(df) <- c("protein", "sample", "counts")
+
+df <- within(df, {
+  treatment <- metadata[sample, "treatment"]
+})
+
+starved2 <- df[df$treatment == "Starved", ]
+starved2$treatment <- "Starved "
+df <- rbind(df, starved2)
+
+times <- c("Starved" = 0, "1d" = 1, "2d" = 2, "4d" = 4, "7d" = 7, "Starved " = 10)
+df$times <- times[as.character(df$treatment)]
+```
+
+
+```{r}
+# X axis
+x_axis_ticks <- list(scale_x_continuous(breaks = c(0, 1, 2, 4, 7, 10), labels = c("S", 1, 2, 4, 7, "S"),
+                     minor_breaks = c(3,5,6, seq(7, 10, by = 3/14))))
+
+ggplot(df, aes(x = times, y = counts, color = protein)) +
+  stat_summary(geom = "line") +
+  stat_summary() +
+  theme_bw() +
+  scale_color_bright(labels = paste0(nitrogen, ": ", names(nitrogen))) +
+  x_axis_ticks +
+  labs(x = "Days since pulse feeding", y = "Normalized log-2 counts, kleptokaryon", color = "Nitrogen acquisition protein")
+```
+
+```{r}
+sessionInfo()
+```

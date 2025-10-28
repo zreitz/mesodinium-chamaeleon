@@ -1,0 +1,165 @@
+---
+title: "Co-processing SM and KN data"
+author: Zach Reitz
+date: "2025-08-26"
+output:
+  html_document
+---
+
+```{r, eval = FALSE, echo = FALSE}
+# For interactive
+.vsc.attach()
+setwd("code/1_counts_processing")
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(DESeq2)
+require(reshape2)
+```
+
+## Load data
+```{r}
+sm_counts <- read.csv("output/sm_raw_counts.csv", 
+                      header = T, row.names = 1, check.names = F)
+sm_metadata <- readRDS("output/sm_metadata.Rda")
+
+kn_counts <- read.csv("output/kn_raw_counts.csv", 
+                      header = T, row.names = 1, check.names = F)
+kn_metadata <- readRDS("output/metadata.Rda")
+```
+
+```{r}
+# Save list of all genes for KEGG mapper
+genes <- unique(c(rownames(sm_counts), rownames(kn_counts)))
+write.table(data.frame(genes, genes), "output/prey_all_genes.txt", sep = " ", row.names = F, col.names = F, quote = F)
+```
+
+```{r}
+# Keep only the comparable free living samples
+sm_metadata <- subset(sm_metadata, groupName == "SM_10uE_Light")
+sm_counts <- subset(sm_counts, select = rownames(sm_metadata))
+
+# Combine metadata
+sm_name <- as.character(sm_metadata$sampleName)
+metadata <- data.frame(
+  sample = factor(c(rownames(kn_metadata), rownames(sm_metadata))),
+  condition = c(as.character(kn_metadata$treatment), sm_metadata$groupName),
+  replicate = factor(c(kn_metadata$replicate, 
+                match(substr(sm_name, nchar(sm_name), nchar(sm_name)), 
+                      LETTERS)))
+)
+
+metadata <- within(metadata, {
+  group <- factor(
+    ifelse(startsWith(as.character(condition), "SM"), "SM", "KN"),
+    levels = c("SM", "KN"))
+  
+  condition <- factor(condition, levels = unique(condition[order(group)]))
+})
+rownames(metadata) <- metadata$sample
+```
+
+
+## filter non-overlapping proteins and low expression
+```{r}
+nrow(sm_counts)
+nrow(kn_counts)
+overlap <- intersect(rownames(sm_counts), rownames(kn_counts))
+
+counts <- cbind(kn_counts[overlap, ], sm_counts[overlap, ])
+
+# Filter low counts
+per_treat <- split.default(counts, metadata$condition)
+# Check if consistently expressed for each treatment
+expr_in_treat <- sapply(per_treat, function(y) {
+  rowSums(y < 10) == 0
+})
+# Keep if expressed in at least one treatment
+expressed <- counts[rowSums(expr_in_treat) > 0, ]
+
+nrow(counts)
+nrow(expressed)
+```
+
+```{r}
+ddsTxi <- DESeqDataSetFromMatrix(countData = expressed,
+                                 colData = metadata,
+                                 design = ~ condition)
+
+transformed <- rlog(ddsTxi, blind = FALSE)
+```
+
+```{r}
+# Plot densities
+df <- reshape2::melt(assay(transformed))
+df$group <- metadata[df$Var2, "group"]
+
+ggplot(df, aes(x = value, group = Var2, color = group)) +
+  ggtitle("Filtered unnormalized log counts") +
+  geom_density() +
+  xlab("Processed expression level") +
+  theme_bw()
+```
+
+
+
+## PCA plot
+```{r}
+# Taken from DESeq2::plotPCA() and modified, as suggested in docs
+object <- transformed
+ntop <- 500
+pcsToUse <- 1:2
+  
+# calculate the variance for each gene
+rv <- rowVars(assay(object))
+
+# select the ntop genes by variance
+select <- order(rv, decreasing=TRUE)[seq_len(min(ntop, length(rv)))]
+
+# perform a PCA on the data in assay(x) for the selected genes
+pca <- prcomp(t(assay(object)[select,]))
+
+# the contribution to the total variance for each component
+percentVar <- pca$sdev^2 / sum( pca$sdev^2 )
+
+# assembly the data for the plot
+pcs <- paste0("PC", pcsToUse)
+d <- data.frame(V1=pca$x[,pcsToUse[1]],
+                V2=pca$x[,pcsToUse[2]],
+                name=colnames(object), 
+                colData(object))
+colnames(d)[1:2] <- pcs
+
+d <- within(d, {
+  condition = as.character(condition)
+  condition[condition == "SM_10uE_Light"] <- "Freeliving"
+  condition <- factor(condition, levels = c("Starved", "1d", "2d", "4d", "7d", "Freeliving"))
+})
+
+colors <- c('#FFF7ECFF', '#7F0000FF', '#D7301FFF', '#FC8D59FF', '#FDD49EFF', "#000000FF")
+
+ggplot(data=d, aes(x=PC1, y=PC2, fill=condition, shape = condition)) +
+  geom_point(size=3) + 
+  xlab(paste0(pcs[1],": ",round(percentVar[pcsToUse[1]] * 100),"% variance")) +
+  ylab(paste0(pcs[2],": ",round(percentVar[pcsToUse[2]] * 100),"% variance")) +
+  
+  scale_shape_manual(values = c(21:25, 21)) +
+  scale_fill_manual(values = colors) +
+  
+  theme_bw() + 
+  theme(aspect.ratio = 1) +
+  ggtitle("Freeliving S. major vs kleptokaryon")
+```
+
+
+## Save files
+```{r}
+saveRDS(metadata, file="output/prey_combo_metadata.Rda")
+saveRDS(counts, file="output/prey_combo_counts.Rda")
+saveRDS(transformed, file="output/prey_combo_rlogged.Rda")
+```
+
+```{r}
+sessionInfo()
+```

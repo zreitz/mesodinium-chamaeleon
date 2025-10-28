@@ -1,0 +1,243 @@
+---
+title: "RNA-Seq data processing"
+author: Zach Reitz
+date: "2025-08-15"
+output:
+  html_document
+---
+
+```{r, eval = FALSE, echo = FALSE}
+# For interactive
+setwd("code/1_counts_processing")
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(DESeq2)
+require(reshape2)
+library(khroma)
+library(data.table)
+```
+
+## Process .sf files
+```{r}
+orgs = c("mc", "kn")
+counts <- lapply(orgs, function(org) {
+  # Get list of sf files
+  sf_files <- list.files(paste0("input/", org, "_quantReads"),
+                         pattern = "sf", full.names = TRUE)
+
+  # Read in the files
+  sf <- lapply(sf_files, read.table, sep = "\t", skip = 1)
+
+  # Get KOs
+  kos <- sf[[1]][,1]
+
+  # Get counts
+  counts <- sapply(sf, function(x) x[,5])
+  rownames(counts) <- kos
+  colnames(counts) <- substr(basename(sf_files), 1, 2)
+
+  counts <- as.data.frame(round(counts))
+
+  # Swap mislabeled samples
+  col = counts$"5c"
+  counts$"5c" = counts$"7c"
+  counts$"7c" = col
+
+  # Save as csv
+  write.csv(counts, paste0("output/", org, "_raw_counts.csv"), 
+            quote=FALSE)
+  counts
+})
+names(counts) <- orgs
+
+saveRDS(counts, "output/raw_counts.Rda")
+```
+
+## Process metadata
+```{r}
+short_names <- c(
+  "Starved" = "Starved", 
+  "24hr_PostFeeding" = "1d", 
+  "48hr_PostFeeding" = "2d", 
+  "96hr_PostFeeding" = "4d",
+  "7day_PostFeeding" = "7d"
+)
+display <- c(
+  "Starved" = "Starved", 
+  "24hr_PostFeeding" = "1 d", 
+  "48hr_PostFeeding" = "2 d", 
+  "96hr_PostFeeding" = "4 d",
+  "7day_PostFeeding" = "7 d"
+)
+
+metadata <- read.table("input/meta.txt", header=F, sep = "\t")
+dimnames(metadata) <- list(metadata$V1, c("sample", "description"))
+
+metadata <- within(metadata, {
+  description <- sub("MC_", "", description)
+  treatment <- factor(short_names[description], levels = short_names)
+  display <- factor(display[description], levels = display)
+  replicate <- factor(substr(sample, 2, 2))
+})
+metadata <- metadata[colnames(counts[[1]]), ]
+
+
+write.csv(metadata, "output/metadata.csv", quote=FALSE)
+saveRDS(metadata, "output/metadata.Rda")
+```
+
+
+```{r, fig.width = 4, fig.height = 3}
+sums <- lapply(counts, colSums)
+fractions <- sums[[2]]/(sums[[1]] + sums[[2]])
+
+color_scheme = c('#7F0000FF', '#D7301FFF', '#FC8D59FF', '#FDD49EFF', '#FFF7ECFF')
+
+df <- data.frame(
+  fractions = fractions, 
+  treatment <- factor(
+    metadata[names(fractions), "treatment"],
+    levels = c("1d","2d","4d","7d","Starved"))
+  )
+
+ggplot(df, aes(x = treatment, y = fractions, fill = treatment, shape = treatment)) +
+  geom_point() +
+  theme_bw() +
+  scale_shape_manual(values = c(22:25, 21)) +
+  scale_fill_manual(values = color_scheme) +
+  scale_y_continuous(limits = c(0, 0.055)) +
+  theme(legend.position = "none") +
+
+  xlab("Treatment") +
+  ylab("Fraction of total mapped reads\nthat were mapped to KN")
+```
+
+### Stats
+```{r}
+# Number of genes with at least 10 counts for each sample
+exp_nr <- sapply(counts, function(x) {
+  apply(x, 2, function(y) {
+    sum(y >= 10)
+  })
+})
+exp_nr <- data.frame(exp_nr)
+
+exp_nr
+
+exp_nr <- cbind(exp_nr, metadata)
+
+ggplot(exp_nr, aes(x = treatment, y = mc, color = replicate)) + 
+  geom_point() +
+  theme_bw() +
+  scale_y_continuous(limits = c(0, NA)) +
+  ylab("Proteins with 10+ mapped reads") +
+  ggtitle("Number of expressed proteins: macronucleus")
+
+ggplot(exp_nr, aes(x = treatment, y = kn, color = replicate)) + 
+  geom_point() +
+  theme_bw() +
+  scale_y_continuous(limits = c(0, NA)) +
+  ylab("Proteins with 10+ mapped reads") +
+  ggtitle("Number of expressed proteins: kleptokaryon")
+```
+
+## Filter proteins with low counts
+```{r}
+# Genes are kept if counts are >= 10 for every sample in at least one treatment
+expressed <- lapply(counts, function(x) {
+  per_treat <- split.default(x, metadata$treatment)
+  # Check if consistently expressed for each treatment
+  expr_in_treat <- sapply(per_treat, function(y) {
+    rowSums(y < 10) == 0
+  })
+  # Keep if expressed in at least one treatment
+  x[rowSums(expr_in_treat) > 0, ]
+})
+
+print("Proteins before filtering:")
+sapply(counts, nrow)
+print("Proteins after filtering:")
+sapply(expressed, nrow)
+```
+
+
+## DESeq normalization with rlog()
+```{r}
+dds <- lapply(expressed, function(x) {
+  DESeqDataSetFromMatrix(
+    countData = x,
+    colData = metadata,
+    design = ~ treatment
+  )
+})
+
+saveRDS(dds, "output/deseq_datasets.Rda")
+
+logged <- lapply(dds, rlog, blind = FALSE)
+```
+
+## Expression level density plots
+```{r}
+for (i in 1:2) {
+  # Plot densities
+  df <- reshape2::melt(assay(logged[[i]]))
+  df <- within(df, {
+    replicate <- metadata[Var2, "replicate"]
+    display <- metadata[Var2, "display"]
+  })
+
+  print(
+    ggplot(df, aes(x = value, group = Var2, 
+                   color = display, linetype = replicate)) +
+      ggtitle(paste("Transformed counts for", toupper(orgs[i]))) +
+      geom_density() +
+      xlab("Transformed expression level") +
+      theme_bw()
+  )
+}
+```
+
+## PCA plot
+Taken from DESeq2::plotPCA() and modified, as suggested in docs
+```{r}
+names <- c("Macronucleus", "Kleptokaryon")
+color_scheme = c('#FFF7ECFF', '#7F0000FF', '#D7301FFF', '#FC8D59FF', '#FDD49EFF')
+for (i in 1:2) {
+  mat <- logged[[i]]
+  # calculate the variance for each gene
+  rv <- rowVars(assay(mat))
+  # select the ntop genes by variance
+  select <- order(rv, decreasing = T)[seq_len(500)]
+  # Perform PCA
+  pca <- prcomp(t(assay(mat)[select,]))
+  # the contribution to the total variance for each component
+  percentVar <- pca$sdev^2 / sum( pca$sdev^2 )
+  # assemble the data for the plot
+  pcs <- c("PC1", "PC2")
+  d <- data.frame(V1=pca$x[,1],
+                  V2=pca$x[,2],
+                  name=colnames(mat), 
+                  colData(mat))
+  colnames(d)[1:2] <- pcs
+
+  # Plot
+  print(
+    ggplot(data=d, aes(x=PC1, y=PC2, fill = display, shape = display)) +
+      geom_point(size=3) + 
+      scale_shape_manual(values = 21:25) +
+      scale_fill_manual(values = color_scheme) +
+      xlab(paste0(pcs[1],": ",round(percentVar[1] * 100),"% variance")) +
+      ylab(paste0(pcs[2],": ",round(percentVar[2] * 100),"% variance")) +
+      labs(title = names[i], fill = "Treatment", shape = "Treatment") +
+      theme_bw() + 
+      theme(aspect.ratio = 1)
+  )
+  cat("\n\n")
+}
+```
+
+```{r}
+sessionInfo()
+```

@@ -1,0 +1,1115 @@
+---
+title: "Starvation Experiment"
+author: "Holly V. Moeller"
+date: "4/4/2021"
+output: html_document
+---
+
+The primary goal of this experiment was to generate RNAseq data for JGI. JGI asked me to generate as many treatments as possible so that we could hopefully see M. chamaeleon express as many genes as possible. The resulting experiment balances this goal with a desire to get a usable dataset. 
+
+The main experiment was a feeding one: We wanted to understand how M. chamaeleon's gene expression changes as it ingests and processes fresh prey. We therefore began with a culture that had been starved for two weeks, and pulse-fed it prey. (In this case, we used Storeatula major as the prey; this is the cryptophyte that our M. chamaeleon culture has been stable on for the longest amount of time.) We took timepoints 1, 2, 4, and 7 days after feeding. For comparison, we also collected data on (1) starved cultures (from just before feeding), (2) well-fed cultures (that were aggressively fed for two weeks; these cultures were actually split off from the ones in the feeding experiment on day 4), and (3) "super-starved" cultures (an opportunistic sample because I had leftover M. chamaeleon).
+
+There was also a second set of samples generated that were offered ammonium as a source of nitrogen. Not particularly well-controlled, but in the dataset...
+
+All samples were generated in triplicate, but unfortunately some failed quality control at JGI and were not sequenced. 
+
+
+Units of stuff in the final "dat" dataframe:
+
+1. ChlpCell = $chl_{cell}$ = chlorophyll per cell, pg chl-a per cell
+
+2. Fv.Fm = $F_V/F_M$ = photosynthetic efficiency, unitless
+
+3. Pmax = $P_{\max}$ = maximum photosynthetic rate at saturating light levels, electrons per molecule chl-a per second
+
+4. a = $\alpha$ = light sensitivity of photosystem II, (electrons per molecule chl-a per second) / (microeinsteins per m2 per second) = electrons * m2 / molecule chl-a
+
+5. Ek = $E_k$ = light level at which photosynthesis saturates, microeinsteins per m2 per second
+
+6. P_I = $P_I$ = photosynthesis at growth irradiance, electrons per molecule chl-a per second
+
+7. P_I.C = $P_{I,chl}$ = photosynthesis at growth irradiance, pg C per pg chl-a per hr
+
+8. P_I.cell = $P_{I,cell}$ = photosynthesis at growth irradiance, pg C per cell per hr
+
+```{r, eval = FALSE, echo = FALSE}
+# For interactive
+setwd("code/physiology")
+```
+
+## Load data / packages
+```{r}
+
+# Load packages
+require(Rmisc) #has summarySE function, which is quite useful
+require(sciplot) #has bargraph.CI function
+
+# Load other information / factors
+Cfix.mult <- 0.01728178 # The multiplier 0.01728178 converts from electrons per chlorophyll molecule per second into pg C per pg chlorophyll-a per hour
+
+# Load data
+fire <- read.csv('input/FIReData.csv',header=TRUE)
+dat <- read.csv('input/MC_starv_export.csv',header=TRUE)
+dat <- dat[dat$Expt==3,]
+dat$ShortTreat2 <- factor(dat$ShortTreat, levels = c("","starved","fed24",'fed48','fed96','fed168','superstarved','wellfed'))
+dat$ChlpmL <- dat$ChlpCell*dat$CellCount
+dat$logcells <- log(dat$CellCount)
+dat$ID <- paste(dat$Feeding,dat$Rep)
+
+
+# Transcriptomic data
+transcriptprop <- read.csv("../2_proportions/output/category_proportions.csv")
+
+MC.transcriptprop <- subset(transcriptprop, org == "MC")
+KN.transcriptprop <- subset(transcriptprop, org == "KN")
+
+
+# Set up plotting parameters
+alphaY <- 1		# transparencies for feeding treatments
+alphaN <- .1
+SM.Y <- rgb(160/255,17/255,27/255,alphaY)
+SM.N <- rgb(160/255,17/255,27/255,alphaN)
+SM.NN <- rgb(160/255,17/255,27/255,.05)
+SM.24 <- rgb(160/255,17/255,27/255,.8)
+SM.48 <- rgb(160/255,17/255,27/255,.65)
+SM.96 <- rgb(160/255,17/255,27/255,.5)
+SM.168 <- rgb(160/255,17/255,27/255,.35)
+
+colvec <- c(SM.N,SM.24,SM.48,SM.96,SM.168,SM.NN,SM.Y)
+
+```
+
+
+## FIRE analysis
+
+```{r FIReAnalysis,fig.height = 6.5, fig.width = 11}
+
+head(fire)
+fire$ID <- paste(fire$ShortTreat,fire$Rep)
+
+pe.stats <- as.data.frame(unique(fire$ID))
+names(pe.stats) <- 'ID'
+#pe.stats$Prey <- fire$Prey[match(pe.stats$ID,fire$ID)]
+#pe.stats$Fed <- fire$Fed[match(pe.stats$ID,fire$ID)]
+#pe.stats$Rep <- fire$Rep[match(pe.stats$ID,fire$ID)]
+#pe.stats$Day <- fire$Day[match(pe.stats$ID,fire$ID)]
+pe.stats$Fv.Fm <- NA
+pe.stats$Pmax <- NA
+pe.stats$Pmax.err <- NA
+pe.stats$Pmax.p <- NA
+pe.stats$a <- NA
+pe.stats$a.err <- NA
+pe.stats$a.p <- NA
+
+PARset <- seq(from =0, to = 200, length.out = 100)  # Create a holding vector of light levels to use for plotting later
+
+for(i in 1:(dim(pe.stats)[1])){
+	if((i-1)%%30 == 0){   # plot results in 30-panel figures
+		par(mar=c(1,1,1,1),mfrow=c(5,6))
+	}
+	
+	subdat <- fire[fire$ID==pe.stats$ID[i],]   # Subset the data
+	
+	
+	plot(subdat$PAR, subdat$ETR,xlim=c(0,200),ylim=c(0,120)); text(max(PARset)*0.5,5,pe.stats$ID[i])  # Plot the raw data
+	
+	pe.stats$Fv.Fm[i] <- subdat[subdat$PAR==0,]$Fv.Fm # Save FvFm
+	nls.summ <- summary(nls(ETR ~ P * tanh(a * PAR / P), data= subdat, start = list(P = 100, a = 1.415)))   # Do curve fit
+	
+	pe.stats$Pmax[i] <- nls.summ$p[1,1]   # Save various statistical parameters
+	pe.stats$Pmax.err[i] <- nls.summ$p[1,2]
+	pe.stats$Pmax.p[i] <- nls.summ$p[1,4]
+	pe.stats$a[i] <- nls.summ$p[2,1]
+	pe.stats$a.err[i] <- nls.summ$p[2,2]
+	pe.stats$a.p[i] <- nls.summ$p[2,4]
+	
+	predictset <- pe.stats$Pmax[i]*tanh(pe.stats$a[i]*PARset/pe.stats$Pmax[i])  
+	lines(PARset,predictset, col='royalblue3')  # Overlay the curve fit
+}
+
+
+pe.stats$Ek <- pe.stats$Pmax / pe.stats$a
+pe.stats$P_I <- pe.stats$Pmax * tanh(pe.stats$a * 10 / pe.stats$Pmax)
+pe.stats$P_I.C <- pe.stats$P_I* Cfix.mult
+```
+Just your normal run-of-the-mill PE curves.
+
+
+
+## Timeseries data: Cell counts
+```{r, fig.height= 5, fig.width=7}
+
+plot(dat$Day,dat$CellCount,las=1,xlab='Experimental Day',ylab='Cell Density (cells/mL)',log='y',pch=c(21,22,23)[dat$Feeding],type='n') # I like to make the first plot using all the data, which automatically gets the y-axis limits wide enough to accommodate any error bars. The type='n' argument makes the points invisible, but alternatively we could make them a very light gray so you could "see" the real data
+
+abline(v=c(8,9,10,12,15,21),lty=2,col='gray50') # Add vertical lines indicating sampling days
+
+count.summ <- summarySE(data=dat,"CellCount",groupvars=c("Day","Feeding"),na.rm=TRUE) # Use summarySE function to create summary of the count data 
+
+
+count.summ$RNAseq <- c(rep(0,12),1,0,1,1,0,1,rep(0,5),1,rep(0,6),1,1)
+points(count.summ$Day,count.summ$CellCount,pch=21,cex=2*count.summ$RNAseq,col='yellow',bg='yellow')
+
+arrows(count.summ$Day,count.summ$CellCount+count.summ$sd,count.summ$Day,count.summ$CellCount-count.summ$sd,code=3,length=.03,angle=90) # Add error bars
+
+count.summ.starved <- count.summ[count.summ$Feeding=='starved',]
+lines(count.summ.starved$Day,count.summ.starved$CellCount,lwd=2,col=SM.N) # Add lines for each of the feeding treatments
+
+count.summ.fed <- count.summ[count.summ$Feeding=='fed',]
+lines(count.summ.fed$Day,count.summ.fed$CellCount,lwd=2,col=SM.48)
+
+count.summ.wellfed <- count.summ[count.summ$Feeding=='wellfed',]
+lines(count.summ.wellfed$Day,count.summ.wellfed$CellCount,lwd=2,col=SM.Y)
+
+points(count.summ$Day,count.summ$CellCount,pch=c(21,22,23)[as.factor(count.summ$Feeding)],cex=1.2,bg ="white"); points(count.summ$Day,count.summ$CellCount,pch=c(21,22,23)[as.factor(count.summ$Feeding)],cex=1.2,bg = c(SM.48,SM.N,SM.Y)[as.factor(count.summ$Feeding)]) # First plot a white background, so that the transparency doesn't let other lines show through
+
+
+
+legend(-8,5000,legend=c("Starved",'Fed Once','Well-Fed','RNAseq Sample'),pch=c(22,21,23,21),pt.cex=c(1.2,1.2,1.2,2),pt.bg=c(SM.N,SM.48,SM.Y,'yellow'),col=c(rep('black',3),'yellow'),bty='o',lty=c(0,0,0,0))
+
+text(7.2,1500,"Starved",srt=90,cex=.8,pos=4)
+text(8.2,1500,"24-hr post feeding",srt=90,cex=.8,pos=4)
+text(9.2,1500,"48-hr post feeding",srt=90,cex=.8,pos=4)
+text(11.2,1500,"96-hr post feeding",srt=90,cex=.8,pos=4)
+text(14,1500,"168-hr post feeding",srt=90,cex=.8,pos=4)
+text(20,1500,"Well-fed/Superstarved",srt=90,cex=.8,pos=4)
+```
+
+Cell densities over time. Light colors are the starvation timeseries: The cells were starving for a week before this timeseries starts (on Day -8; maybe I should adjust when the experimental day 0 is), so they hang on for another week before entering a slow decline. The very last point in this timeseries is on day 21; these are the "super-starved" cells who have been starving for 5 weeks! They hung on pretty well in spite of that; sadly I didn't think to take population measurements over that whole timeseries as these were sort of "happy accident" samples.
+
+The intermediate red timeseries shows the pulsed feeding experiment. The cells got fed 10 prey : 1 Mesodinium on day 8, and then I took timepoints 24, 48, 96, and 168h (7 days) post feeding. You can see that the cells actually experience some mortality in that first day of feeding. I fed them pretty dense prey, but had to feed a lot (because the culture was quite dense), so this could be some byproduct in the prey culture that they didn't like? But after 24hrs, growth picks up, and you can see them continue that growth for about 5 days before plateauing. 
+
+Four days after the first feeding, I split off an aliquot of the culture to put into the "well-fed" treatment (shown in the darkest red). Every two days, I topped these cultures off with prey to a 5:1 ratio; the steep decline on Day 15 is a dilution to make sure that they could continue to grow exponentially. The well-fed timepoint was taken on Day 21, one day after their last feeding (so there were still prey present in the culture before washing for sampling).
+
+
+
+## Timeseries data: Growth rates
+
+```{r GrowthCalc,fig.width=6,fig.height=4}
+dat$mu.3day.terminal <- NaN # growth curves with 3 day sliding window; growth rate is saved for the last day
+dat$mu.3day.centered <- NaN # growth rates with 3 day sliding window; growth rate is saved for the central day
+
+dat2 <- dat[order(dat$Feeding,dat$Rep,dat$Day),]
+
+
+window <- 3 # number of datapoints needed to compute a growth rate
+for(i in window:dim(dat2)[1]){ # If you start this for loop too early, there are insufficient data to calculate a growth rate
+  if(dat2$ID[i]==dat2$ID[i-window+1]){ # Only calculate growth rates when the previous datapoints are from the same treatment group and flask
+    lm1 <- lm(dat2[(i-window+1):i,]$logcells~dat2[(i-window+1):i,]$Day) # Compute a linear model to get the growth rate
+    if(!is.na(lm1$coefficients[2])){ # If the linear model worked
+      if(lm1$coefficients[2]>-.5){  # And if the slope is > -.5 (i.e., the cells weren't diluted)
+        dat2$mu.3day.terminal[i] <- lm1$coefficients[2]  # save the slope as the terminal growth rate for the 3-day window
+        dat2$mu.3day.centered[i-1] <- lm1$coefficients[2] }} # save the slope as the centered growth rate for the midpoint of this 3-day window
+  }
+}
+
+
+par(mar=c(4,4,1,1))
+
+# Plots with terminal growth rates
+plot(dat2$Day,dat2$mu.3day.terminal,las=1,xlab='Experimental Day',ylab=expression(paste('Growth Rate (',d^{-1},'), 3-day averaging')),pch=c(21,22,23)[dat$Feeding],ylim=c(-.5,1),type='n')
+abline(h=0,lty=1)
+abline(v=c(8,9,10,12,15,21),lty=2,col='gray50') # Add vertical lines indicating sampling days
+
+mu.summ <- summarySE(data=dat2[!is.na(dat2$mu.3day.terminal),],"mu.3day.terminal",groupvars=c("Day","Feeding"),na.rm=TRUE) # Use summarySE function to create summary of the growth data 
+#mu.summ[mu.summ$mu<-.5,]$mu <- NaN
+
+arrows(mu.summ$Day,mu.summ$mu.3day.terminal+mu.summ$sd,mu.summ$Day,mu.summ$mu.3day.terminal-mu.summ$sd,code=3,length=.03,angle=90) # Add error bars
+
+mu.summ.starved <- mu.summ[mu.summ$Feeding=='starved',]
+lines(mu.summ.starved$Day,mu.summ.starved$mu.3day.terminal,lwd=2,col=SM.N) # Add lines for each of the feeding treatments
+
+mu.summ.fed <- mu.summ[mu.summ$Feeding=='fed',]
+lines(mu.summ.fed$Day,mu.summ.fed$mu.3day.terminal,lwd=2,col=SM.48)
+
+mu.summ.wellfed <- mu.summ[mu.summ$Feeding=='wellfed',]
+lines(mu.summ.wellfed$Day,mu.summ.wellfed$mu.3day.terminal,lwd=2,col=SM.Y)
+
+
+points(mu.summ$Day,mu.summ$mu.3day.terminal,pch=c(21,22,23)[as.factor(mu.summ$Feeding)],cex=1.2,bg ="white"); points(mu.summ$Day,mu.summ$mu.3day.terminal,pch=c(21,22,23)[as.factor(mu.summ$Feeding)],cex=1.2,bg = c(SM.48,SM.N,SM.Y)[as.factor(mu.summ$Feeding)]) # First plot a white background, so that the transparency doesn't let other lines show through
+
+legend(-8,1,legend=c("Starved",'Fed Once','Well-Fed','Sampling Point'),pch=c(22,21,23),pt.cex=c(1.2,1.2,1.2,0),pt.bg=c(SM.N,SM.48,SM.Y),bty='o',lty=c(0,0,0,2))
+
+# Plots with centered growth rates
+plot(dat2$Day,dat2$mu.3day.centered,las=1,xlab='Experimental Day',ylab=expression(paste('Growth Rate (',d^{-1},'), 3-day averaging')),pch=c(21,22,23)[dat$Feeding],ylim=c(-.5,1),type='n')
+abline(h=0,lty=1)
+abline(v=c(8,9,10,12,15,21),lty=2,col='gray50') # Add vertical lines indicating sampling days
+
+mu.summ <- summarySE(data=dat2[!is.na(dat2$mu.3day.centered),],"mu.3day.centered",groupvars=c("Day","Feeding"),na.rm=TRUE) # Use summarySE function to create summary of the growth data 
+#mu.summ[mu.summ$mu<-.5,]$mu <- NaN
+
+arrows(mu.summ$Day,mu.summ$mu.3day.centered+mu.summ$sd,mu.summ$Day,mu.summ$mu.3day.centered-mu.summ$sd,code=3,length=.03,angle=90) # Add error bars
+
+mu.summ.starved <- mu.summ[mu.summ$Feeding=='starved',]
+lines(mu.summ.starved$Day,mu.summ.starved$mu.3day.centered,lwd=2,col=SM.N) # Add lines for each of the feeding treatments
+
+mu.summ.fed <- mu.summ[mu.summ$Feeding=='fed',]
+lines(mu.summ.fed$Day,mu.summ.fed$mu.3day.centered,lwd=2,col=SM.48)
+
+mu.summ.wellfed <- mu.summ[mu.summ$Feeding=='wellfed',]
+lines(mu.summ.wellfed$Day,mu.summ.wellfed$mu.3day.centered,lwd=2,col=SM.Y)
+
+
+points(mu.summ$Day,mu.summ$mu.3day.centered,pch=c(21,22,23)[as.factor(mu.summ$Feeding)],cex=1.2,bg ="white"); points(mu.summ$Day,mu.summ$mu.3day.centered,pch=c(21,22,23)[as.factor(mu.summ$Feeding)],cex=1.2,bg = c(SM.48,SM.N,SM.Y)[as.factor(mu.summ$Feeding)]) # First plot a white background, so that the transparency doesn't let other lines show through
+
+legend(-8,1,legend=c("Starved",'Fed Once','Well-Fed','Sampling Point'),pch=c(22,21,23),pt.cex=c(1.2,1.2,1.2,0),pt.bg=c(SM.N,SM.48,SM.Y),bty='o',lty=c(0,0,0,2))
+```
+
+This graph is another way of visualizing the timeseries above, presenting growth rates over time. This allows us to more clearly see how the pulse-fed cells have an increase, then decrease in their growth rate. It also reveals that the well-fed cells' growth rates do slow down a bit once they get into the rhythm of the feeding. Unclear if this is just noise, but a growth rate of 0.5 is about as strong as I've seen them at this light level (10uE).
+
+
+Stacking population size, growth rates, and cryptophyte : MC ratios in the same plot
+```{r,fig.width=4,fig.height=7,warning=F}
+
+par(mar = c(1,4,3,1), mfrow=c(3,1))
+
+# MC population size
+plot(dat$Day,dat$CellCount,las=1,xlab='Experimental Day',ylab='Cell Density (cells/mL)',log='y',pch=c(21,22,23)[dat$Feeding],type='n') # I like to make the first plot using all the data, which automatically gets the y-axis limits wide enough to accommodate any error bars. The type='n' argument makes the points invisible, but alternatively we could make them a very light gray so you could "see" the real data
+
+abline(v=c(8,9,10,12,15,21),lty=2,col='gray50') # Add vertical lines indicating sampling days
+
+count.summ <- summarySE(data=dat,"CellCount",groupvars=c("Day","Feeding"),na.rm=TRUE) # Use summarySE function to create summary of the count data 
+
+
+count.summ$RNAseq <- c(rep(0,12),1,0,1,1,0,1,rep(0,5),1,rep(0,6),1,1)
+points(count.summ$Day,count.summ$CellCount,pch=21,cex=2*count.summ$RNAseq,col='yellow',bg='yellow')
+
+arrows(count.summ$Day,count.summ$CellCount+count.summ$sd,count.summ$Day,count.summ$CellCount-count.summ$sd,code=3,length=.03,angle=90) # Add error bars
+
+count.summ.starved <- count.summ[count.summ$Feeding=='starved',]
+lines(count.summ.starved$Day,count.summ.starved$CellCount,lwd=2,col=SM.N) # Add lines for each of the feeding treatments
+
+count.summ.fed <- count.summ[count.summ$Feeding=='fed',]
+lines(count.summ.fed$Day,count.summ.fed$CellCount,lwd=2,col=SM.48)
+
+count.summ.wellfed <- count.summ[count.summ$Feeding=='wellfed',]
+lines(count.summ.wellfed$Day,count.summ.wellfed$CellCount,lwd=2,col=SM.Y)
+
+points(count.summ$Day,count.summ$CellCount,pch=c(21,22,23)[as.factor(count.summ$Feeding)],cex=1.2,bg ="white"); points(count.summ$Day,count.summ$CellCount,pch=c(21,22,23)[as.factor(count.summ$Feeding)],cex=1.2,bg = c(SM.48,SM.N,SM.Y)[as.factor(count.summ$Feeding)]) # First plot a white background, so that the transparency doesn't let other lines show through
+
+legend(-8,5000,legend=c("Starved",'Fed Once','Well-Fed','RNAseq Sample'),pch=c(22,21,23,21),pt.cex=c(1.2,1.2,1.2,2),pt.bg=c(SM.N,SM.48,SM.Y,'yellow'),col=c(rep('black',3),'yellow'),bty='o',lty=c(0,0,0,0))
+
+text(7.2,1500,"Starved",srt=90,cex=.8,pos=4)
+text(8.2,1500,"24-hr post feeding",srt=90,cex=.8,pos=4)
+text(9.2,1500,"48-hr post feeding",srt=90,cex=.8,pos=4)
+text(11.2,1500,"96-hr post feeding",srt=90,cex=.8,pos=4)
+text(14,1500,"168-hr post feeding",srt=90,cex=.8,pos=4)
+text(20,1500,"Well-fed/Superstarved",srt=90,cex=.8,pos=4)
+
+
+par(mar=c(2,4,2,1))
+# Growth rates
+plot(dat2$Day,dat2$mu.3day.centered,las=1,xlab='Experimental Day',ylab=expression(paste('Growth Rate (',d^{-1},'), 3-day averaging')),pch=c(21,22,23)[dat$Feeding],ylim=c(-.5,1),type='n')
+abline(h=0,lty=1)
+abline(v=c(8,9,10,12,15,21),lty=2,col='gray50') # Add vertical lines indicating sampling days
+
+mu.summ <- summarySE(data=dat2[!is.na(dat2$mu.3day.centered),],"mu.3day.centered",groupvars=c("Day","Feeding"),na.rm=TRUE) # Use summarySE function to create summary of the growth data 
+#mu.summ[mu.summ$mu<-.5,]$mu <- NaN
+
+arrows(mu.summ$Day,mu.summ$mu.3day.centered+mu.summ$sd,mu.summ$Day,mu.summ$mu.3day.centered-mu.summ$sd,code=3,length=.03,angle=90) # Add error bars
+
+mu.summ.starved <- mu.summ[mu.summ$Feeding=='starved',]
+lines(mu.summ.starved$Day,mu.summ.starved$mu.3day.centered,lwd=2,col=SM.N) # Add lines for each of the feeding treatments
+
+mu.summ.fed <- mu.summ[mu.summ$Feeding=='fed',]
+lines(mu.summ.fed$Day,mu.summ.fed$mu.3day.centered,lwd=2,col=SM.48)
+
+mu.summ.wellfed <- mu.summ[mu.summ$Feeding=='wellfed',]
+lines(mu.summ.wellfed$Day,mu.summ.wellfed$mu.3day.centered,lwd=2,col=SM.Y)
+
+
+points(mu.summ$Day,mu.summ$mu.3day.centered,pch=c(21,22,23)[as.factor(mu.summ$Feeding)],cex=1.2,bg ="white"); points(mu.summ$Day,mu.summ$mu.3day.centered,pch=c(21,22,23)[as.factor(mu.summ$Feeding)],cex=1.2,bg = c(SM.48,SM.N,SM.Y)[as.factor(mu.summ$Feeding)]) # First plot a white background, so that the transparency doesn't let other lines show through
+
+legend(-8,1,legend=c("Starved",'Fed Once','Well-Fed','Sampling Point'),pch=c(22,21,23),pt.cex=c(1.2,1.2,1.2,0),pt.bg=c(SM.N,SM.48,SM.Y),bty='o',lty=c(0,0,0,2))
+
+
+
+par(mar=c(3,4,1,1))
+# Cryptophyte to MC ratio
+dat$Crypto.to.MC <- dat$CryptoCount / dat$CellCount
+plot(dat$Day,dat$Crypto.to.MC,las=1,xlab='Experimental Day',ylab='Cryptophytes to MC',pch=c(21,22,23)[dat$Feeding],type='n') # I like to make the first plot using all the data, which automatically gets the y-axis limits wide enough to accommodate any error bars. The type='n' argument makes the points invisible, but alternatively we could make them a very light gray so you could "see" the real data
+mtext('Experimental Day',side=1,line=2,cex=.7)
+
+abline(v=c(8,9,10,12,15,21),lty=2,col='gray50') # Add vertical lines indicating sampling days
+
+ratio.summ <- summarySE(data=dat,"Crypto.to.MC",groupvars=c("Day","Feeding"),na.rm=TRUE) # Use summarySE function to create summary of the count data 
+
+
+ratio.summ$RNAseq <- c(rep(0,12),1,0,1,1,0,1,rep(0,5),1,rep(0,6),1,1)
+points(ratio.summ$Day,ratio.summ$Crypto.to.MC,pch=21,cex=2*ratio.summ$RNAseq,col='yellow',bg='yellow')
+
+arrows(ratio.summ$Day,ratio.summ$Crypto.to.MC+ratio.summ$sd,ratio.summ$Day,ratio.summ$Crypto.to.MC-ratio.summ$sd,code=3,length=.03,angle=90) # Add error bars
+
+ratio.summ.starved <- ratio.summ[ratio.summ$Feeding=='starved',]
+lines(ratio.summ.starved$Day,ratio.summ.starved$Crypto.to.MC,lwd=2,col=SM.N) # Add lines for each of the feeding treatments
+
+ratio.summ.fed <- ratio.summ[ratio.summ$Feeding=='fed',]
+lines(ratio.summ.fed$Day,ratio.summ.fed$Crypto.to.MC,lwd=2,col=SM.48)
+
+ratio.summ.wellfed <- ratio.summ[ratio.summ$Feeding=='wellfed',]
+lines(ratio.summ.wellfed$Day,ratio.summ.wellfed$Crypto.to.MC,lwd=2,col=SM.Y)
+
+points(ratio.summ$Day,ratio.summ$Crypto.to.MC,pch=c(21,22,23)[as.factor(ratio.summ$Feeding)],cex=1.2,bg ="white"); points(ratio.summ$Day,ratio.summ$Crypto.to.MC,pch=c(21,22,23)[as.factor(ratio.summ$Feeding)],cex=1.2,bg = c(SM.48,SM.N,SM.Y)[as.factor(ratio.summ$Feeding)]) # First plot a white background, so that the transparency doesn't let other lines show through
+```
+
+
+```{r,fig.width=4,fig.height=7,warning=F}
+dat.crop <- dat[dat$Feeding!='wellfed' & dat$Day < 21,]
+dat.crop$Day.corr <- dat.crop$Day-8
+par(mar = c(1,4,3,1), mfrow=c(3,1))
+
+# MC population size
+plot(dat.crop$Day.corr,dat.crop$CellCount/1000,las=1,xlab='Experimental Day',ylab='',log='y',pch=c(21,22,23)[dat.crop$Feeding],type='n') 
+mtext(expression(paste('Cell Density (',10^3,' cells ',mL^-1,')')),side=2,line=2.2,cex=.7)
+# I like to make the first plot using all the data, which automatically gets the y-axis limits wide enough to accommodate any error bars. The type='n' argument makes the points invisible, but alternatively we could make them a very light gray so you could "see" the real data
+
+abline(v=c(8,9,10,12,15,21)-8,lty=2,col='gray50') # Add vertical lines indicating sampling days
+
+count.summ <- summarySE(data=dat.crop,"CellCount",groupvars=c("Day.corr","Feeding"),na.rm=TRUE) # Use summarySE function to create summary of the count data 
+count.summ$RNAseq <- c(rep(0,12),1,0,1,1,0,1,rep(0,3))
+
+# Error bars
+arrows(count.summ$Day,count.summ$CellCount/1000+count.summ$sd/1000,count.summ$Day,count.summ$CellCount/1000-count.summ$sd/1000,code=3,length=.03,angle=90) # Add error bars
+
+# Lines
+count.summ.starved <- count.summ[count.summ$Feeding=='starved',]
+lines(count.summ.starved$Day,count.summ.starved$CellCount/1000,lwd=2,col=SM.N) # Add lines for each of the feeding treatments
+count.summ.fed <- count.summ[count.summ$Feeding=='fed',]
+lines(count.summ.fed$Day,count.summ.fed$CellCount/1000,lwd=2,col=SM.48)
+
+# Points
+points(count.summ$Day,count.summ$CellCount/1000,pch=c(21,22,23)[as.factor(count.summ$Feeding)],cex=1.2,bg ="white"); points(count.summ$Day,count.summ$CellCount/1000,pch=c(21,22,23)[as.factor(count.summ$Feeding)],cex=1.2,bg = c(SM.48,SM.N,SM.Y)[as.factor(count.summ$Feeding)]) # First plot a white background, so that the transparency doesn't let other lines show through
+
+legend(-16,12,legend=c("Starved",'Fed'),pch=c(22,21,23,21),pt.cex=c(1.2,1.2,1.2,2),pt.bg=c(SM.N,SM.48,SM.Y,'yellow'),col=c(rep('black',3),'yellow'),bty='o',lty=c(0,0,0,0))
+
+text(.2,30,"Starved",srt=90,cex=.8,pos=2)
+text(1.2,30,"1d post feeding",srt=90,cex=.8,pos=2)
+text(2.2,30,"2d post feeding",srt=90,cex=.8,pos=2)
+text(3.2,8,"4d post feeding",srt=90,cex=.8,pos=4)
+text(6.2,8,"7d post feeding",srt=90,cex=.8,pos=4)
+#text(20,1500,"Well-fed/Superstarved",srt=90,cex=.8,pos=4)
+
+
+# Growth rates
+par(mar=c(2,4,2,1))
+dat2.crop <- dat2[dat2$Feeding!='wellfed',]
+dat2.crop$Day.corr <- dat2.crop$Day-8
+# Growth rates
+plot(dat2.crop$Day.corr,dat2.crop$mu.3day.centered,las=1,xlab='Experimental Day',ylab='',pch=c(21,22,23)[dat2.crop$Feeding],ylim=c(-.15,0.45),xlim=c(-16,7),type='n')
+mtext(expression(paste('Growth Rate (',d^{-1},'), 3-day averaging')),side=2,line=2.4,cex=.7)
+abline(h=0,lty=1)
+abline(v=c(8,9,10,12,15,21)-8,lty=2,col='gray50') # Add vertical lines indicating sampling days
+
+mu.summ <- summarySE(data=dat2.crop[!is.na(dat2.crop$mu.3day.centered),],"mu.3day.centered",groupvars=c("Day.corr","Feeding"),na.rm=TRUE) # Use summarySE function to create summary of the growth data 
+#mu.summ[mu.summ$mu<-.5,]$mu <- NaN
+
+arrows(mu.summ$Day.corr,mu.summ$mu.3day.centered+mu.summ$sd,mu.summ$Day.corr,mu.summ$mu.3day.centered-mu.summ$sd,code=3,length=.03,angle=90) # Add error bars
+
+mu.summ.starved <- mu.summ[mu.summ$Feeding=='starved',]
+lines(mu.summ.starved$Day.corr,mu.summ.starved$mu.3day.centered,lwd=2,col=SM.N) # Add lines for each of the feeding treatments
+
+mu.summ.fed <- mu.summ[mu.summ$Feeding=='fed',]
+lines(mu.summ.fed$Day.corr,mu.summ.fed$mu.3day.centered,lwd=2,col=SM.48)
+
+points(mu.summ$Day.corr,mu.summ$mu.3day.centered,pch=c(21,22,23)[as.factor(mu.summ$Feeding)],cex=1.2,bg ="white"); points(mu.summ$Day.corr,mu.summ$mu.3day.centered,pch=c(21,22,23)[as.factor(mu.summ$Feeding)],cex=1.2,bg = c(SM.48,SM.N,SM.Y)[as.factor(mu.summ$Feeding)]) # First plot a white background, so that the transparency doesn't let other lines show through
+
+legend(-16,.43,legend=c("Starved",'Fed'),pch=c(22,21,23,21),pt.cex=c(1.2,1.2,1.2,2),pt.bg=c(SM.N,SM.48,SM.Y,'yellow'),col=c(rep('black',3),'yellow'),bty='o',lty=c(0,0,0,0))
+
+
+
+par(mar=c(3,4,1,1))
+# Cryptophyte to MC ratio
+dat$Crypto.to.MC <- dat$CryptoCount / dat$CellCount
+dat.crop$Crypto.to.MC <- dat.crop$CryptoCount / dat.crop$CellCount
+plot(dat.crop$Day.corr,dat.crop$Crypto.to.MC,las=1,xlab='Experimental Day',ylab='',pch=c(21,22,23)[dat$Feeding],type='n') 
+mtext(expression(paste(italic('S. major'),' to ',italic('M. chamaeleon'),' ratio')),side=2,line=2.2,cex=.7)
+mtext('Experimental Day',side=1,line=2,cex=.7)
+abline(h=0,lty=1)
+abline(v=c(8,9,10,12,15,21)-8,lty=2,col='gray50') # Add vertical lines indicating sampling days
+
+ratio.summ <- summarySE(data=dat.crop,"Crypto.to.MC",groupvars=c("Day.corr","Feeding"),na.rm=TRUE) # Use summarySE function to create summary of the count data 
+
+arrows(ratio.summ$Day.corr,ratio.summ$Crypto.to.MC+ratio.summ$sd,ratio.summ$Day.corr,ratio.summ$Crypto.to.MC-ratio.summ$sd,code=3,length=.03,angle=90) # Add error bars
+
+ratio.summ.starved <- ratio.summ[ratio.summ$Feeding=='starved',]
+lines(ratio.summ.starved$Day.corr,ratio.summ.starved$Crypto.to.MC,lwd=2,col=SM.N) # Add lines for each of the feeding treatments
+
+ratio.summ.fed <- ratio.summ[ratio.summ$Feeding=='fed',]
+lines(ratio.summ.fed$Day.corr,ratio.summ.fed$Crypto.to.MC,lwd=2,col=SM.48)
+
+points(ratio.summ$Day.corr,ratio.summ$Crypto.to.MC,pch=c(21,22,23)[as.factor(ratio.summ$Feeding)],cex=1.2,bg ="white"); points(ratio.summ$Day.corr,ratio.summ$Crypto.to.MC,pch=c(21,22,23)[as.factor(ratio.summ$Feeding)],cex=1.2,bg = c(SM.48,SM.N,SM.Y)[as.factor(ratio.summ$Feeding)]) # First plot a white background, so that the transparency doesn't let other lines show through
+
+legend(-16,11.5,legend=c("Starved",'Fed'),pch=c(22,21,23,21),pt.cex=c(1.2,1.2,1.2,2),pt.bg=c(SM.N,SM.48,SM.Y,'yellow'),col=c(rep('black',3),'yellow'),bty='o',lty=c(0,0,0,0))
+
+```
+
+
+
+
+## Photophysiology data
+
+```{r, fig.height=4,fig.width=6}
+
+dat$P_I.cell <- dat$P_I.C * dat$ChlpCell # pg C fixed per cell per hr
+
+#dat$P_I.CtoC <- dat$P_I.cell/dat$C.p.cell/1000*12 # g C fixed per g C in a cell per day (note 12-hr light:dark cycle)
+
+subdat <- droplevels(dat[!is.na(dat$P_I.cell),])
+
+xcoords <- c(1,2,3,4,5,6.5,7.5)
+spacing <- c(rep(.1,5),.3,.1)
+
+
+bargraph.CI(ShortTreat2,Fv.Fm,data=subdat,space=spacing,las=2,col=colvec,ylab='Fv/Fm')
+
+bargraph.CI(ShortTreat2,Pmax,data=subdat,space=spacing,las=2,col=colvec,ylab='Max Phot Rate (e- s-1 chl-a-1)')
+
+bargraph.CI(ShortTreat2,P_I,data=subdat,space=spacing,las=2,col=colvec,ylab='Phot Rate at growth irrad. (e- s-1 chl-a-1)')
+
+bargraph.CI(ShortTreat2,ChlpCell,data=subdat,space=spacing,las=2,col=colvec,ylab='Chlorophyll (pg/cell)')
+
+bargraph.CI(ShortTreat2,P_I.cell,data=subdat,space=spacing,las=2,col=colvec,ylab='Phot. Rate (pg C cell-1 h-1)')
+
+
+bargraph.CI(ShortTreat2,ChlpmL,data=subdat,space=spacing,las=2,col=colvec,ylab='Chlorophyll (pg/ml)')
+
+```
+
+Here's a blast of all the photophysiology data. I think the main story here is that when pulse-fed, M. chamaeleon gets back into the business of photosynthesis very quickly, but just getting a handful of plastids isn't enough to sustain it for very long. 
+
+If you're wondering why the per-cell chlorophyll content and carbon fixation rates of well-fed cells are less than those that have only had prey for a day or two, my guess is that this will come down to differences in cell size. I think the well-fed cells are probably slightly smaller, so they have a lower chlorophyll content and also an overall lower per-cell photosynthetic rate. (I took samples for CN analysis, so we'll have data on cellular carbon content eventually.)
+
+The secondary story (which we sort of already knew) is how damned long these guys can hang onto their plastids for. The starved samples had been starved for 3 weeks, and I'm frankly shocked that they retained so much photosynthetic capacity on a per-chlorophyll basis. The "superstarved" treatment (which went hungry for an additional two weeks) look more like what an extremely starved culture ought to be, in my opinion. But note that they haven't given up the ghost of photosynthesis yet. ADDL NOTE 25 SEPT 2024: After working on these bugs at EMBL in May of this year, I am more convinced than ever that M. chamaeleon "holds on" to photosynthesis for a remarkably long time. Starved cells still had at least one relic plastid, typically with a large and very diffuse nucleus. This plastid was often very oddly shaped, and sometimes "spiraled" around the cell.
+
+I'll also note anecdotally that the cultures changed colour quite a bit during the experiment. Starved treatments were always straw-coloured, and 7-days post feeding, the pulse-fed treatments were yellowing back up too.
+
+
+```{r,fig.height=7,fig.width=7}
+
+par(mar=c(4,4,1,1),mfrow=c(2,1))
+plot(dat$Day,dat$CellCount,las=1,xlab='Experimental Day',ylab='Cell Density (cells/mL)',log='y',pch=c(21,22,23)[dat$Feeding],type='n') # I like to make the first plot using all the data, which automatically gets the y-axis limits wide enough to accommodate any error bars. The type='n' argument makes the points invisible, but alternatively we could make them a very light gray so you could "see" the real data
+
+abline(v=c(8,9,10,12,15,21),lty=2,col='gray50') # Add vertical lines indicating sampling days
+
+count.summ <- summarySE(data=dat,"CellCount",groupvars=c("Day","Feeding"),na.rm=TRUE) # Use summarySE function to create summary of the count data 
+
+arrows(count.summ$Day,count.summ$CellCount+count.summ$sd,count.summ$Day,count.summ$CellCount-count.summ$sd,code=3,length=.03,angle=90) # Add error bars
+
+count.summ.starved <- count.summ[count.summ$Feeding=='starved',]
+lines(count.summ.starved$Day,count.summ.starved$CellCount,lwd=2,col=SM.N) # Add lines for each of the feeding treatments
+
+count.summ.fed <- count.summ[count.summ$Feeding=='fed',]
+lines(count.summ.fed$Day,count.summ.fed$CellCount,lwd=2,col=SM.48)
+
+count.summ.wellfed <- count.summ[count.summ$Feeding=='wellfed',]
+lines(count.summ.wellfed$Day,count.summ.wellfed$CellCount,lwd=2,col=SM.Y)
+
+
+points(count.summ$Day,count.summ$CellCount,pch=c(21,22,23)[as.factor(count.summ$Feeding)],cex=1.2,bg ="white"); points(count.summ$Day,count.summ$CellCount,pch=c(21,22,23)[as.factor(count.summ$Feeding)],cex=1.2,bg = c(SM.48,SM.N,SM.Y)[as.factor(count.summ$Feeding)]) # First plot a white background, so that the transparency doesn't let other lines show through
+
+
+legend(-8,5000,legend=c("Starved",'Fed Once','Well-Fed','Sampling Point'),pch=c(22,21,23),pt.cex=c(1.2,1.2,1.2,0),pt.bg=c(SM.N,SM.48,SM.Y),bty='o',lty=c(0,0,0,2))
+
+text(7.2,1500,"Starved",srt=90,cex=.8,pos=4)
+text(8.2,1500,"24-hr post feeding",srt=90,cex=.8,pos=4)
+text(9.2,1500,"48-hr post feeding",srt=90,cex=.8,pos=4)
+text(11.2,1500,"96-hr post feeding",srt=90,cex=.8,pos=4)
+text(14,1500,"168-hr post feeding",srt=90,cex=.8,pos=4)
+text(20,1500,"Well-fed/Superstarved",srt=90,cex=.8,pos=4)
+
+
+bargraph.CI(ShortTreat2,P_I.cell,data=subdat,space=spacing,las=2,col=colvec,ylab='Phot. Rate (pg C cell-1 h-1)')
+
+```
+
+# Mapping growth rate data onto photosynthesis data
+```{r}
+subdat <- droplevels(dat[!is.na(dat$P_I.cell),])
+head(subdat)
+
+for(i in 1:dim(subdat)[1]){
+  if(subdat$ShortTreat[i]=='starved'){
+    subdat$mu[i] <- dat2[dat2$Day==8 & dat2$Rep==subdat$Rep[i],]$mu.3day.terminal
+  }
+  if(subdat$ShortTreat[i] == 'fed48'){
+    subdat$mu[i] <- dat2[dat2$Day==10 & dat2$Rep==subdat$Rep[i],]$mu.3day.centered
+  }
+  if(subdat$ShortTreat[i] == 'fed96'){
+    subdat$mu[i] <- dat2[dat2$Day==12 & dat2$Rep==subdat$Rep[i],]$mu.3day.centered
+  }
+  if(subdat$ShortTreat[i] == 'fed168'){
+    subdat$mu[i] <- dat2[dat2$Day==15 & dat2$Rep==subdat$Rep[i],]$mu.3day.terminal
+  }
+  if(subdat$ShortTreat[i] == 'wellfed'){
+    subdat$mu[i] <- dat2[dat2$Day==21 & dat2$ShortTreat=='wellfed' & dat2$Rep==subdat$Rep[i],]$mu.3day.terminal
+  }
+  if(subdat$ShortTreat[i] == 'fed24'){
+    subdat$mu[i] <- dat2[dat2$Day==9 & dat2$Rep==subdat$Rep[i],]$mu.3day.centered
+  }
+}
+
+
+bargraph.CI(ShortTreat2,mu,data=subdat,space=spacing,las=2,col=colvec,ylab='Growth rate')
+
+
+#### write.csv(subdat,"/Users/hollyvm/GoogleSync/Mesodinium/JGI/Mchamaeleon_Starvation/physiol_growth_export.csv")
+
+```
+
+
+## Modified transcriptomic linkage testing different curve fits
+
+```{r}
+# Match the treatment variables
+level.matching <- as.data.frame(levels(as.factor(subdat$ShortTreat)))
+colnames(level.matching) <- 'ShortTreat'
+level.matching$TreatmentDays <- c(7,1,2,4,0,50,NaN)
+subdat$TreatmentDays <- level.matching$TreatmentDays[match(subdat$ShortTreat,level.matching$ShortTreat)]
+
+
+# Form data summaries
+PIcell.summ <- summarySE(data = subdat[subdat$ShortTreat!='superstarved' & subdat$ShortTreat!='wellfed' ,], 'P_I.cell', groupvars = 'TreatmentDays')
+FvFm.summ <- summarySE(data = subdat[subdat$ShortTreat!='superstarved'& subdat$ShortTreat!='wellfed',], 'Fv.Fm', groupvars = 'TreatmentDays')
+ChlpCell.summ <- summarySE(data = subdat[subdat$ShortTreat!='superstarved'& subdat$ShortTreat!='wellfed',], 'ChlpCell', groupvars = 'TreatmentDays')
+mu.summ <- summarySE(data = subdat[subdat$ShortTreat!='superstarved'& subdat$ShortTreat!='wellfed',], 'mu', groupvars = 'TreatmentDays')
+
+
+subcats <- unique(transcriptprop$desc)
+```
+
+Illustration of one category
+```{r,fig.height=4,fig.width=5}
+
+i <- 5
+
+par(mar=c(4,4,1,1))
+
+# Summarize the transcriptional data
+MCtranscr.summ <- summarySE(data = transcriptprop[transcriptprop$desc==subcats[i] & transcriptprop$org=='MC' & transcriptprop$times!=10,], 'value',groupvars='times')
+KNtranscr.summ <- summarySE(data = transcriptprop[transcriptprop$desc==subcats[i] & transcriptprop$org=='KN' & transcriptprop$times!=10,], 'value',groupvars='times')
+  
+# Plot as a function of photosynthetic rate -- MC
+plot(PIcell.summ$P_I.cell, MCtranscr.summ$value,las=1,type='n',xlim =c(min(PIcell.summ$P_I.cell - PIcell.summ$se,na.rm=T),max(PIcell.summ$P_I.cell + PIcell.summ$se,na.rm=T)), ylim = c(min(MCtranscr.summ$value-MCtranscr.summ$se,na.rm=T), max(MCtranscr.summ$value+MCtranscr.summ$se,na.rm=T)), main = subcats[i], xlab='Cellular photosynthetic rate',ylab='Prop. transcriptome')
+
+# MC points
+arrows(PIcell.summ$P_I.cell - PIcell.summ$se, MCtranscr.summ$value, PIcell.summ$P_I.cell + PIcell.summ$se, MCtranscr.summ$value, code=3, length= 0.05, angle=90)
+arrows(PIcell.summ$P_I.cell, MCtranscr.summ$value - MCtranscr.summ$se, PIcell.summ$P_I.cell, MCtranscr.summ$value + MCtranscr.summ$se, code=3, length= 0.05, angle=90)
+points(PIcell.summ$P_I.cell, MCtranscr.summ$value,cex=2,pch=21,bg='white',col='white',lwd=2)
+points(PIcell.summ$P_I.cell, MCtranscr.summ$value,cex=2,pch=21,bg=c(colvec[2:5],colvec[1]),col=c(colvec[2:5],colvec[1]),lwd=2)
+  
+# Fit different functions using NLS and add to the plot
+dataconcat <- as.data.frame(cbind(PIcell.summ$P_I.cell,MCtranscr.summ$value))
+xcoords <- seq(from = min(dataconcat$V1), to = max(dataconcat$V1),length.out = 100)
+## Linear model
+linmod <- nls(V2 ~ a*V1 + b, data = dataconcat, start = list(a = 0, b = 0))
+lines(xcoords, xcoords*summary(linmod)$parameters[1,1] + summary(linmod)$parameters[2,1])
+## Quadratic model
+quadmod <- nls(V2 ~ a*(V1 + b)^2 + c, data =dataconcat, start = list(a = 1, b = 0, c= 0))
+lines(xcoords, summary(quadmod)$parameters[1,1]*(xcoords+summary(quadmod)$parameters[2,1])^2 + summary(quadmod)$parameters[3,1],col='blue')
+## Saturating model
+satmod <- nls(V2 ~ a*V1 / (b + V1), data = dataconcat, start = list(a = 1, b = 1))
+lines(xcoords, xcoords*summary(satmod)$parameters[1,1]/(xcoords + summary(satmod)$parameters[2,1]),col='green')
+## Exponential model
+#expmod <- nls(V2 ~ c*exp(a*V1) + b, data = dataconcat, start = list(a = .01, b = 0, c = .01))
+#lines(xcoords, summary(expmod)$parameters[3,1]*exp(xcoords*summary(expmod)$parameters[1,1]) + summary(expmod)$parameters[2,1],col='orange')
+
+# Choose the best model
+#AICset <- c(AIC(linmod),AIC(quadmod),AIC(satmod),AIC(expmod))
+AICset <- c(AIC(linmod),AIC(quadmod),AIC(satmod))
+if(which(AICset == min(AICset)) == 1){
+  lines(xcoords, xcoords*summary(linmod)$parameters[1,1] + summary(linmod)$parameters[2,1], lwd=3, col = 'black')
+}
+if(which(AICset == min(AICset)) == 2){
+  lines(xcoords, summary(quadmod)$parameters[1,1]*(xcoords+summary(quadmod)$parameters[2,1])^2 + summary(quadmod)$parameters[3,1],col='blue',lwd=3)
+}
+if(which(AICset == min(AICset)) == 3){
+  lines(xcoords, xcoords*summary(satmod)$parameters[1,1]/(xcoords + summary(satmod)$parameters[2,1]),col='green',lwd=3)
+}
+#if(which(AICset == min(AICset)) == 4){
+#  lines(xcoords, summary(expmod)$parameters[3,1]*exp(xcoords*summary(expmod)$parameters[1,1]) + summary(expmod)$parameters[2,1],col='orange',lwd=3)
+#}
+
+
+```
+
+
+Iterate through all categories and plot only the best-fitting model
+
+```{r,fig.width=12,fig.height=10}
+svg("output/fractions_v_photrate.svg", height = 9, width = 14)
+
+par(mar=c(3,4,0.5,0),mfcol=c(4,5))
+
+R2.threshold <- 0.5
+
+subcats <- unique(transcriptprop$desc)
+
+# Photosynthetic rate
+for(i in 1:length(subcats)){
+  # Summarize the transcriptional data
+MCtranscr.summ <- summarySE(data = transcriptprop[transcriptprop$desc==subcats[i] & transcriptprop$org=='MC' & transcriptprop$times!=10,], 'value',groupvars='times')
+KNtranscr.summ <- summarySE(data = transcriptprop[transcriptprop$desc==subcats[i] & transcriptprop$org=='KN' & transcriptprop$times!=10,], 'value',groupvars='times')
+
+  # Plot as a function of photosynthetic rate
+  plot(PIcell.summ$P_I.cell, MCtranscr.summ$value,las=1,ylab='',xlab='',type='n', xlim =c(min(PIcell.summ$P_I.cell - PIcell.summ$se,na.rm=T),max(PIcell.summ$P_I.cell + PIcell.summ$se,na.rm=T)), ylim = c(min(c(MCtranscr.summ$value-MCtranscr.summ$se, KNtranscr.summ$value - KNtranscr.summ$se),na.rm=T), max(c(MCtranscr.summ$value+MCtranscr.summ$se, KNtranscr.summ$value + KNtranscr.summ$se),na.rm=T)), main = subcats[i])
+  
+# MC data
+## Add points
+arrows(PIcell.summ$P_I.cell - PIcell.summ$se, MCtranscr.summ$value, PIcell.summ$P_I.cell + PIcell.summ$se, MCtranscr.summ$value, code=3, length= 0.05, angle=90)
+arrows(PIcell.summ$P_I.cell, MCtranscr.summ$value - MCtranscr.summ$se, PIcell.summ$P_I.cell, MCtranscr.summ$value + MCtranscr.summ$se, code=3, length= 0.05, angle=90)
+points(PIcell.summ$P_I.cell, MCtranscr.summ$value,cex=2,pch=c(21,22,23,24,25),bg='gray50',col='gray50',lwd=2)
+#points(PIcell.summ$P_I.cell, MCtranscr.summ$value,cex=2,pch=c(21,22,23,24,25),bg=c(colvec[2:5],colvec[1]),col=c(colvec[2:5],colvec[1]),lwd=2)
+  
+## Fit different functions using NLS
+dataconcat <- as.data.frame(cbind(PIcell.summ$P_I.cell,MCtranscr.summ$value))
+xcoords <- seq(from = min(dataconcat$V1), to = max(dataconcat$V1),length.out = 100)
+## Linear model
+linmod <- nls(V2 ~ a*V1 + b, data = dataconcat, start = list(a = 0, b = 0))
+## Quadratic model
+quadmod <- nls(V2 ~ a*(V1 + b)^2 + c, data =dataconcat, start = list(a = 1, b = 0, c= 0))
+## Saturating model
+satmod <- nls(V2 ~ a*V1 / (b + V1), data = dataconcat, start = list(a = 1, b = 1))
+
+## Choose and plot the best model
+V2bar <- mean(dataconcat$V2,na.rm=T)
+SStot <- sum((dataconcat$V2 - V2bar)^2)
+AICset <- c(AIC(linmod),AIC(quadmod),AIC(satmod))
+if(which(AICset == min(AICset)) == 1){
+  SSres <- sum((summary(linmod)$residuals)^2)
+  pseudo.R2 <- 1 - SSres/SStot
+  if(pseudo.R2 > R2.threshold){
+    lines(xcoords, xcoords*summary(linmod)$parameters[1,1] + summary(linmod)$parameters[2,1], lwd=3, col = 'black')
+  }
+}
+if(which(AICset == min(AICset)) == 2){
+  SSres <- sum((summary(quadmod)$residuals)^2)
+  pseudo.R2 <- 1 - SSres/SStot
+  if(pseudo.R2 > R2.threshold){
+    lines(xcoords, summary(quadmod)$parameters[1,1]*(xcoords+summary(quadmod)$parameters[2,1])^2 + summary(quadmod)$parameters[3,1],col='black',lwd=3)
+  }
+}
+if(which(AICset == min(AICset)) == 3){
+  SSres <- sum((summary(satmod)$residuals)^2)
+  pseudo.R2 <- 1 - SSres/SStot
+  if(pseudo.R2 > R2.threshold){
+    lines(xcoords, xcoords*summary(satmod)$parameters[1,1]/(xcoords + summary(satmod)$parameters[2,1]),col='black',lwd=3)
+  }
+}
+
+# KN data
+## Add points
+arrows(PIcell.summ$P_I.cell - PIcell.summ$se, KNtranscr.summ$value, PIcell.summ$P_I.cell + PIcell.summ$se, KNtranscr.summ$value, code=3, length= 0.05, angle=90)
+arrows(PIcell.summ$P_I.cell, KNtranscr.summ$value - KNtranscr.summ$se, PIcell.summ$P_I.cell, KNtranscr.summ$value + KNtranscr.summ$se, code=3, length= 0.05, angle=90)
+points(PIcell.summ$P_I.cell, KNtranscr.summ$value,cex=2,pch=c(21,22,23,24,25),bg='white',col='white',lwd=2)
+points(PIcell.summ$P_I.cell, KNtranscr.summ$value,cex=2,pch=c(21,22,23,24,25),bg=colvec[3],col=colvec[3],lwd=2)
+  
+## Fit different functions using NLS
+dataconcat <- as.data.frame(cbind(PIcell.summ$P_I.cell,KNtranscr.summ$value))
+xcoords <- seq(from = min(dataconcat$V1), to = max(dataconcat$V1),length.out = 100)
+## Linear model
+linmod <- nls(V2 ~ a*V1 + b, data = dataconcat, start = list(a = 0, b = 0))
+## Quadratic model
+quadmod <- nls(V2 ~ a*(V1 + b)^2 + c, data =dataconcat, start = list(a = 1, b = 0, c= 0))
+## Saturating model
+satmod <- nls(V2 ~ a*V1 / (b + V1), data = dataconcat, start = list(a = 1, b = 0))
+
+## Choose and plot the best model
+V2bar <- mean(dataconcat$V2,na.rm=T)
+SStot <- sum((dataconcat$V2 - V2bar)^2)
+AICset <- c(AIC(linmod),AIC(quadmod),AIC(satmod))
+if(which(AICset == min(AICset)) == 1){
+  SSres <- sum((summary(linmod)$residuals)^2)
+  pseudo.R2 <- 1 - SSres/SStot
+  if(pseudo.R2 > R2.threshold){
+    lines(xcoords, xcoords*summary(linmod)$parameters[1,1] + summary(linmod)$parameters[2,1], lwd=3, col = colvec[3])
+  }
+}
+if(which(AICset == min(AICset)) == 2){
+  SSres <- sum((summary(quadmod)$residuals)^2)
+  pseudo.R2 <- 1 - SSres/SStot
+  if(pseudo.R2 > R2.threshold){
+    lines(xcoords, summary(quadmod)$parameters[1,1]*(xcoords+summary(quadmod)$parameters[2,1])^2 + summary(quadmod)$parameters[3,1],col=colvec[3],lwd=3)
+  }
+}
+if(which(AICset == min(AICset)) == 3){
+  SSres <- sum((summary(satmod)$residuals)^2)
+  pseudo.R2 <- 1 - SSres/SStot
+  if(pseudo.R2 > R2.threshold){
+    lines(xcoords, xcoords*summary(satmod)$parameters[1,1]/(xcoords + summary(satmod)$parameters[2,1]),col=colvec[3],lwd=3)
+  }
+}
+
+
+if(i == 12){
+  mtext(paste('Phot. Rate (pg C cell-1 h-1)'),side=1,line=1.8,cex=.8)
+}
+}
+plot(1,1,type='n',xaxt='n',yaxt='n')
+legend(x='topleft',inset=c(.1,.2),legend=c(expression(italic('Mesodinium')),'Kleptokaryon'),pch=c(21,21),pt.cex=3,lwd=2, col=c('black',colvec[3]), pt.bg=c('gray50',colvec[3]),lty=c(1,1),cex=1.5)
+
+dev.off()
+```
+
+
+```{r,fig.width=15,fig.height=8}
+
+par(mar=c(3,4,0.5,4),mfcol=c(4,5))
+
+subcats <- unique(transcriptprop$desc)
+
+# Photosynthetic rate
+for(i in 1:length(subcats)){
+  # Summarize the transcriptional data
+MCtranscr.summ <- summarySE(data = transcriptprop[transcriptprop$desc==subcats[i] & transcriptprop$org=='MC' & transcriptprop$times!=10,], 'value',groupvars='times')
+KNtranscr.summ <- summarySE(data = transcriptprop[transcriptprop$desc==subcats[i] & transcriptprop$org=='KN' & transcriptprop$times!=10,], 'value',groupvars='times')
+
+# MC data
+# Plot as a function of photosynthetic rate
+plot(PIcell.summ$P_I.cell, MCtranscr.summ$value,las=1,ylab='',xlab='',type='n', xlim =c(min(PIcell.summ$P_I.cell - PIcell.summ$se,na.rm=T),max(PIcell.summ$P_I.cell + PIcell.summ$se,na.rm=T)), ylim = c(min(c(MCtranscr.summ$value-MCtranscr.summ$se),na.rm=T), max(c(MCtranscr.summ$value+MCtranscr.summ$se),na.rm=T)), main = subcats[i])
+  
+
+## Add points
+arrows(PIcell.summ$P_I.cell - PIcell.summ$se, MCtranscr.summ$value, PIcell.summ$P_I.cell + PIcell.summ$se, MCtranscr.summ$value, code=3, length= 0.05, angle=90)
+arrows(PIcell.summ$P_I.cell, MCtranscr.summ$value - MCtranscr.summ$se, PIcell.summ$P_I.cell, MCtranscr.summ$value + MCtranscr.summ$se, code=3, length= 0.05, angle=90)
+points(PIcell.summ$P_I.cell, MCtranscr.summ$value,cex=2,pch=c(21,22,23,24,25),bg='gray50',col='gray50',lwd=2)
+#points(PIcell.summ$P_I.cell, MCtranscr.summ$value,cex=2,pch=c(21,22,23,24,25),bg=c(colvec[2:5],colvec[1]),col=c(colvec[2:5],colvec[1]),lwd=2)
+  
+## Fit different functions using NLS
+dataconcat <- as.data.frame(cbind(PIcell.summ$P_I.cell,MCtranscr.summ$value))
+xcoords <- seq(from = min(dataconcat$V1), to = max(dataconcat$V1),length.out = 100)
+## Linear model
+linmod <- nls(V2 ~ a*V1 + b, data = dataconcat, start = list(a = 0, b = 0))
+## Quadratic model
+quadmod <- nls(V2 ~ a*(V1 + b)^2 + c, data =dataconcat, start = list(a = 1, b = 0, c= 0))
+## Saturating model
+satmod <- nls(V2 ~ a*V1 / (b + V1), data = dataconcat, start = list(a = 1, b = 1))
+
+## Choose and plot the best model
+AICset <- c(AIC(linmod),AIC(quadmod),AIC(satmod))
+if(which(AICset == min(AICset)) == 1){
+  lines(xcoords, xcoords*summary(linmod)$parameters[1,1] + summary(linmod)$parameters[2,1], lwd=3, col = 'black')
+}
+if(which(AICset == min(AICset)) == 2){
+  lines(xcoords, summary(quadmod)$parameters[1,1]*(xcoords+summary(quadmod)$parameters[2,1])^2 + summary(quadmod)$parameters[3,1],col='black',lwd=3)
+}
+if(which(AICset == min(AICset)) == 3){
+  lines(xcoords, xcoords*summary(satmod)$parameters[1,1]/(xcoords + summary(satmod)$parameters[2,1]),col='black',lwd=3)
+}
+
+# KN data
+par(new =TRUE)
+plot(PIcell.summ$P_I.cell, MCtranscr.summ$value,las=1,ylab='',xlab='',type='n', xlim =c(min(PIcell.summ$P_I.cell - PIcell.summ$se,na.rm=T),max(PIcell.summ$P_I.cell + PIcell.summ$se,na.rm=T)), ylim = c(min(KNtranscr.summ$value - KNtranscr.summ$se,na.rm=T), max(KNtranscr.summ$value + KNtranscr.summ$se,na.rm=T)), axes = FALSE)
+axis(side = 4, col = colvec[3], col.axis = colvec[3], lwd=2,las=1)
+
+## Add points
+arrows(PIcell.summ$P_I.cell - PIcell.summ$se, KNtranscr.summ$value, PIcell.summ$P_I.cell + PIcell.summ$se, KNtranscr.summ$value, code=3, length= 0.05, angle=90)
+arrows(PIcell.summ$P_I.cell, KNtranscr.summ$value - KNtranscr.summ$se, PIcell.summ$P_I.cell, KNtranscr.summ$value + KNtranscr.summ$se, code=3, length= 0.05, angle=90)
+points(PIcell.summ$P_I.cell, KNtranscr.summ$value,cex=2,pch=c(21,22,23,24,25),bg='white',col='white',lwd=2)
+points(PIcell.summ$P_I.cell, KNtranscr.summ$value,cex=2,pch=c(21,22,23,24,25),bg=colvec[3],col=colvec[3],lwd=2)
+  
+## Fit different functions using NLS
+dataconcat <- as.data.frame(cbind(PIcell.summ$P_I.cell,KNtranscr.summ$value))
+xcoords <- seq(from = min(dataconcat$V1), to = max(dataconcat$V1),length.out = 100)
+## Linear model
+linmod <- nls(V2 ~ a*V1 + b, data = dataconcat, start = list(a = 0, b = 0))
+## Quadratic model
+quadmod <- nls(V2 ~ a*(V1 + b)^2 + c, data =dataconcat, start = list(a = 1, b = 0, c= 0))
+## Saturating model
+satmod <- nls(V2 ~ a*V1 / (b + V1), data = dataconcat, start = list(a = 1, b = 0))
+
+## Choose and plot the best model
+AICset <- c(AIC(linmod),AIC(quadmod),AIC(satmod))
+if(which(AICset == min(AICset)) == 1){
+  lines(xcoords, xcoords*summary(linmod)$parameters[1,1] + summary(linmod)$parameters[2,1], lwd=3, col = colvec[3])
+}
+if(which(AICset == min(AICset)) == 2){
+  lines(xcoords, summary(quadmod)$parameters[1,1]*(xcoords+summary(quadmod)$parameters[2,1])^2 + summary(quadmod)$parameters[3,1],col=colvec[3],lwd=3)
+}
+if(which(AICset == min(AICset)) == 3){
+  lines(xcoords, xcoords*summary(satmod)$parameters[1,1]/(xcoords + summary(satmod)$parameters[2,1]),col=colvec[3],lwd=3)
+}
+
+
+if(i == 12){
+  mtext(paste('Phot. Rate (pg C cell-1 h-1)'),side=1,line=1.8,cex=.8)
+}
+}
+plot(1,1,type='n',xaxt='n',yaxt='n')
+legend(x='topleft',inset=c(.1,.2),legend=c(expression(italic('Mesodinium')),'Kleptokaryon'),pch=c(21,21),pt.cex=3,lwd=2, col=c('black',colvec[3]), pt.bg=c('gray50',colvec[3]),lty=c(1,1),cex=1.5)
+
+
+```
+
+Growth rates --
+
+```{r,fig.height=4,fig.width=5}
+
+i <- 7
+
+MCtranscr.summ <- summarySE(data = transcriptprop[transcriptprop$desc==subcats[i] & transcriptprop$org=='MC' & transcriptprop$times!=10,], 'value',groupvars='times')
+KNtranscr.summ <- summarySE(data = transcriptprop[transcriptprop$desc==subcats[i] & transcriptprop$org=='KN' & transcriptprop$times!=10,], 'value',groupvars='times')
+
+
+par(mar=c(4,4,1,1))
+
+
+# MC data
+# Plot as a function of growth rate
+plot(mu.summ$mu ~ MCtranscr.summ$value,las=1,ylab='',xlab='',type='n', ylim =c(min(mu.summ$mu - mu.summ$se,na.rm=T),max(mu.summ$mu + mu.summ$se,na.rm=T)), xlim = c(min(c(MCtranscr.summ$value-MCtranscr.summ$se),na.rm=T), max(c(MCtranscr.summ$value+MCtranscr.summ$se),na.rm=T)), main = subcats[i])
+  
+
+## Add points
+arrows(MCtranscr.summ$value, mu.summ$mu - mu.summ$se, MCtranscr.summ$value, mu.summ$mu + mu.summ$se, code=3, length= 0.05, angle=90)
+arrows(MCtranscr.summ$value - MCtranscr.summ$se, mu.summ$mu, MCtranscr.summ$value + MCtranscr.summ$se, mu.summ$mu, code=3, length= 0.05, angle=90)
+points(mu.summ$mu ~ MCtranscr.summ$value,cex=2,pch=c(21,22,23,24,25),bg='gray50',col='gray50',lwd=2)
+  
+## Fit different functions using NLS
+dataconcat <- as.data.frame(cbind(MCtranscr.summ$value,mu.summ$mu))
+xcoords <- seq(from = min(dataconcat$V1), to = max(dataconcat$V1),length.out = 100)
+## Linear model
+linmod <- nls(V2 ~ a*V1 + b, data = dataconcat, start = list(a = 0, b = 0))
+## Quadratic model
+quadmod <- nls(V2 ~ a*(V1 + b)^2 + c, data =dataconcat, start = list(a = 1, b = -mean(dataconcat$V1,na.rm=T), c = .0))
+## Saturating model
+#satmod <- nls(V2 ~ a*V1 / (b + V1) + c, data = dataconcat, start = list(a = .1, b = 1, c = 0))
+
+## Choose and plot the best model
+#AICset <- c(AIC(linmod),AIC(quadmod),AIC(satmod))
+AICset <- c(AIC(linmod),AIC(quadmod))
+if(which(AICset == min(AICset)) == 1){
+  lines(xcoords, xcoords*summary(linmod)$parameters[1,1] + summary(linmod)$parameters[2,1], lwd=3, col = 'black')
+}
+if(which(AICset == min(AICset)) == 2){
+  lines(xcoords, summary(quadmod)$parameters[1,1]*(xcoords+summary(quadmod)$parameters[2,1])^2 + summary(quadmod)$parameters[3,1],col='black',lwd=3)
+}
+#if(which(AICset == min(AICset)) == 3){
+#  lines(xcoords, xcoords*summary(satmod)$parameters[1,1]/(xcoords + #summary(satmod)$parameters[2,1]),col='black',lwd=3)
+#}
+
+
+
+
+```
+
+
+
+
+
+Iterate through all categories and plot only the best-fitting model
+
+```{r,fig.width=12,fig.height=10}
+
+svg("output/fractions_v_growth.svg", height = 9, width = 14)
+
+par(mar=c(3,4,0.5,0),mfcol=c(4,5))
+
+R2.threshold <- 0.5
+
+subcats <- unique(transcriptprop$desc)
+
+# Photosynthetic rate
+for(i in 1:length(subcats)){
+  # Summarize the transcriptional data
+MCtranscr.summ <- summarySE(data = transcriptprop[transcriptprop$desc==subcats[i] & transcriptprop$org=='MC' & transcriptprop$times!=10,], 'value',groupvars='times')
+KNtranscr.summ <- summarySE(data = transcriptprop[transcriptprop$desc==subcats[i] & transcriptprop$org=='KN' & transcriptprop$times!=10,], 'value',groupvars='times')
+
+  # Plot as a function of photosynthetic rate
+  plot(mu.summ$mu, MCtranscr.summ$value,las=1,ylab='',xlab='',type='n', xlim =c(min(mu.summ$mu - mu.summ$se,na.rm=T),max(mu.summ$mu + mu.summ$se,na.rm=T)), ylim = c(min(c(MCtranscr.summ$value-MCtranscr.summ$se, KNtranscr.summ$value - KNtranscr.summ$se),na.rm=T), max(c(MCtranscr.summ$value+MCtranscr.summ$se, KNtranscr.summ$value + KNtranscr.summ$se),na.rm=T)), main = subcats[i])
+  
+# MC data
+## Add points
+arrows(mu.summ$mu - mu.summ$se, MCtranscr.summ$value, mu.summ$mu + mu.summ$se, MCtranscr.summ$value, code=3, length= 0.05, angle=90)
+arrows(mu.summ$mu, MCtranscr.summ$value - MCtranscr.summ$se, mu.summ$mu, MCtranscr.summ$value + MCtranscr.summ$se, code=3, length= 0.05, angle=90)
+points(mu.summ$mu, MCtranscr.summ$value,cex=2,pch=c(21,22,23,24,25),bg='gray50',col='gray50',lwd=2)
+#points(mu.summ$mu, MCtranscr.summ$value,cex=2,pch=c(21,22,23,24,25),bg=c(colvec[2:5],colvec[1]),col=c(colvec[2:5],colvec[1]),lwd=2)
+  
+## Fit different functions using NLS
+dataconcat <- as.data.frame(cbind(mu.summ$mu,MCtranscr.summ$value))
+xcoords <- seq(from = min(dataconcat$V1), to = max(dataconcat$V1),length.out = 100)
+## Linear model
+linmod <- nls(V2 ~ a*V1 + b, data = dataconcat, start = list(a = 0, b = 0))
+## Quadratic model
+quadmod <- nls(V2 ~ a*(V1 + b)^2 + c, data =dataconcat, start = list(a = 1, b = 0, c= 0))
+## Saturating model
+#satmod <- nls(V2 ~ a*V1 / (b + V1) + c, data = dataconcat, start = list(a = 1, b = 1, c = 0))
+
+## Choose and plot the best model
+V2bar <- mean(dataconcat$V2,na.rm=T)
+SStot <- sum((dataconcat$V2 - V2bar)^2)
+AICset <- c(AIC(linmod),AIC(quadmod))#,AIC(satmod))
+if(which(AICset == min(AICset)) == 1){
+  SSres <- sum((summary(linmod)$residuals)^2)
+  pseudo.R2 <- 1 - SSres/SStot
+  if(pseudo.R2 > R2.threshold){
+    lines(xcoords, xcoords*summary(linmod)$parameters[1,1] + summary(linmod)$parameters[2,1], lwd=3, col = 'black')
+  }
+}
+if(which(AICset == min(AICset)) == 2){
+  SSres <- sum((summary(quadmod)$residuals)^2)
+  pseudo.R2 <- 1 - SSres/SStot
+  if(pseudo.R2 > R2.threshold){
+    lines(xcoords, summary(quadmod)$parameters[1,1]*(xcoords+summary(quadmod)$parameters[2,1])^2 + summary(quadmod)$parameters[3,1],col='black',lwd=3)
+  }
+}
+if(which(AICset == min(AICset)) == 3){
+  SSres <- sum((summary(satmod)$residuals)^2)
+  pseudo.R2 <- 1 - SSres/SStot
+  if(pseudo.R2 > R2.threshold){
+    lines(xcoords, xcoords*summary(satmod)$parameters[1,1]/(xcoords + summary(satmod)$parameters[2,1]),col='black',lwd=3)
+  }
+}
+
+# KN data
+## Add points
+arrows(mu.summ$mu - mu.summ$se, KNtranscr.summ$value, mu.summ$mu + mu.summ$se, KNtranscr.summ$value, code=3, length= 0.05, angle=90)
+arrows(mu.summ$mu, KNtranscr.summ$value - KNtranscr.summ$se, mu.summ$mu, KNtranscr.summ$value + KNtranscr.summ$se, code=3, length= 0.05, angle=90)
+points(mu.summ$mu, KNtranscr.summ$value,cex=2,pch=c(21,22,23,24,25),bg='white',col='white',lwd=2)
+points(mu.summ$mu, KNtranscr.summ$value,cex=2,pch=c(21,22,23,24,25),bg=colvec[3],col=colvec[3],lwd=2)
+  
+## Fit different functions using NLS
+dataconcat <- as.data.frame(cbind(mu.summ$mu,KNtranscr.summ$value))
+xcoords <- seq(from = min(dataconcat$V1), to = max(dataconcat$V1),length.out = 100)
+## Linear model
+linmod <- nls(V2 ~ a*V1 + b, data = dataconcat, start = list(a = 0, b = 0))
+## Quadratic model
+quadmod <- nls(V2 ~ a*(V1 + b)^2 + c, data =dataconcat, start = list(a = 1, b = 0, c= 0))
+## Saturating model
+#satmod <- nls(V2 ~ a*V1 / (b + V1) + c, data = dataconcat, start = list(a = 1, b = 0, c = -.10))
+
+## Choose and plot the best model
+V2bar <- mean(dataconcat$V2,na.rm=T)
+SStot <- sum((dataconcat$V2 - V2bar)^2)
+AICset <- c(AIC(linmod),AIC(quadmod))#,AIC(satmod))
+if(which(AICset == min(AICset)) == 1){
+  SSres <- sum((summary(linmod)$residuals)^2)
+  pseudo.R2 <- 1 - SSres/SStot
+  if(pseudo.R2 > R2.threshold){
+    lines(xcoords, xcoords*summary(linmod)$parameters[1,1] + summary(linmod)$parameters[2,1], lwd=3, col = colvec[3])
+  }
+}
+if(which(AICset == min(AICset)) == 2){
+  SSres <- sum((summary(quadmod)$residuals)^2)
+  pseudo.R2 <- 1 - SSres/SStot
+  if(pseudo.R2 > R2.threshold){
+    lines(xcoords, summary(quadmod)$parameters[1,1]*(xcoords+summary(quadmod)$parameters[2,1])^2 + summary(quadmod)$parameters[3,1],col=colvec[3],lwd=3)
+  }
+}
+if(which(AICset == min(AICset)) == 3){
+  SSres <- sum((summary(satmod)$residuals)^2)
+  pseudo.R2 <- 1 - SSres/SStot
+  if(pseudo.R2 > R2.threshold){
+    lines(xcoords, xcoords*summary(satmod)$parameters[1,1]/(xcoords + summary(satmod)$parameters[2,1]) + summary(satmod)$parameters[3,1],col=colvec[3],lwd=3)
+  }
+}
+
+
+if(i == 12){
+  mtext(paste('Growth rate (d-1)'),side=1,line=1.8,cex=.8)
+}
+}
+plot(1,1,type='n',xaxt='n',yaxt='n')
+legend(x='topleft',inset=c(.1,.2),legend=c(expression(italic('Mesodinium')),'Kleptokaryon'),pch=c(21,21),pt.cex=3,lwd=2, col=c('black',colvec[3]), pt.bg=c('gray50',colvec[3]),lty=c(1,1),cex=1.5)
+
+dev.off()
+```
+
+
+```{r,fig.width=15,fig.height=8}
+
+par(mar=c(3,4,0.5,4),mfrow=c(4,5))
+
+subcats <- unique(transcriptprop$desc)
+
+# Growth rate
+for(i in 1:length(subcats)){
+  # Summarize the transcriptional data
+MCtranscr.summ <- summarySE(data = transcriptprop[transcriptprop$desc==subcats[i] & transcriptprop$org=='MC' & transcriptprop$times!=10,], 'value',groupvars='times')
+KNtranscr.summ <- summarySE(data = transcriptprop[transcriptprop$desc==subcats[i] & transcriptprop$org=='KN' & transcriptprop$times!=10,], 'value',groupvars='times')
+
+# MC data
+# Plot as a function of photosynthetic rate
+plot(mu.summ$mu ~ MCtranscr.summ$value,las=1,ylab='',xlab='',type='n', ylim =c(min(mu.summ$mu - mu.summ$se,na.rm=T),max(mu.summ$mu + mu.summ$se,na.rm=T)), xlim = c(min(c(MCtranscr.summ$value-MCtranscr.summ$se),na.rm=T), max(c(MCtranscr.summ$value+MCtranscr.summ$se),na.rm=T)), main = subcats[i])
+  
+
+## Add points
+arrows(MCtranscr.summ$value, mu.summ$mu - mu.summ$se, MCtranscr.summ$value, mu.summ$mu + mu.summ$se, code=3, length= 0.05, angle=90)
+arrows(MCtranscr.summ$value - MCtranscr.summ$se, mu.summ$mu, MCtranscr.summ$value + MCtranscr.summ$se, mu.summ$mu, code=3, length= 0.05, angle=90)
+points(mu.summ$mu ~ MCtranscr.summ$value,cex=2,pch=c(21,22,23,24,25),bg='gray50',col='gray50',lwd=2)
+  
+## Fit different functions using NLS
+dataconcat <- as.data.frame(cbind(MCtranscr.summ$value,mu.summ$mu))
+xcoords <- seq(from = min(dataconcat$V1), to = max(dataconcat$V1),length.out = 100)
+## Linear model
+linmod <- nls(V2 ~ a*V1 + b, data = dataconcat, start = list(a = 0, b = 0))
+## Quadratic model
+quadmod <- nls(V2 ~ a*(V1 + b)^2 + c, data =dataconcat, start = list(a = -1, b = -mean(dataconcat$V1,na.rm=T), c = .0))
+## Saturating model
+#satmod <- nls(V2 ~ a*V1 / (b + V1), data = dataconcat, start = list(a = 10, b = 3))
+
+## Choose and plot the best model
+#AICset <- c(AIC(linmod),AIC(quadmod),AIC(satmod))
+AICset <- c(AIC(linmod),AIC(quadmod))
+if(which(AICset == min(AICset)) == 1){
+  lines(xcoords, xcoords*summary(linmod)$parameters[1,1] + summary(linmod)$parameters[2,1], lwd=3, col = 'black')
+}
+if(which(AICset == min(AICset)) == 2){
+  lines(xcoords, summary(quadmod)$parameters[1,1]*(xcoords+summary(quadmod)$parameters[2,1])^2 + summary(quadmod)$parameters[3,1],col='black',lwd=3)
+}
+#if(which(AICset == min(AICset)) == 3){
+#  lines(xcoords, xcoords*summary(satmod)$parameters[1,1]/(xcoords + #summary(satmod)$parameters[2,1]),col='black',lwd=3)
+#}
+
+# KN data
+par(new =TRUE)
+plot(mu.summ$mu ~ MCtranscr.summ$value,las=1,ylab='',xlab='',type='n', ylim =c(min(mu.summ$mu - mu.summ$se,na.rm=T),max(mu.summ$mu + mu.summ$se,na.rm=T)), xlim = c(min(KNtranscr.summ$value - KNtranscr.summ$se,na.rm=T), max(KNtranscr.summ$value + KNtranscr.summ$se,na.rm=T)), axes = FALSE)
+axis(side = 4, col = colvec[3], col.axis = colvec[3], lwd=2,las=1)
+
+## Add points
+arrows(KNtranscr.summ$value, mu.summ$mu - mu.summ$se, KNtranscr.summ$value, mu.summ$mu + mu.summ$se, code=3, length= 0.05, angle=90)
+arrows(KNtranscr.summ$value - KNtranscr.summ$se, mu.summ$mu, KNtranscr.summ$value + KNtranscr.summ$se, mu.summ$mu, code=3, length= 0.05, angle=90)
+points(mu.summ$mu ~ KNtranscr.summ$value,cex=2,pch=c(21,22,23,24,25),bg='white',col='white',lwd=2)
+points(mu.summ$mu ~ KNtranscr.summ$value,cex=2,pch=c(21,22,23,24,25),bg=colvec[3],col=colvec[3],lwd=2)
+  
+## Fit different functions using NLS
+dataconcat <- as.data.frame(cbind(KNtranscr.summ$value,mu.summ$mu))
+xcoords <- seq(from = min(dataconcat$V1), to = max(dataconcat$V1),length.out = 100)
+## Linear model
+linmod <- nls(V2 ~ a*V1 + b, data = dataconcat, start = list(a = 0, b = 0))
+## Quadratic model
+quadmod <- nls(V2 ~ a*(V1 + b)^2 + c, data =dataconcat, start = list(a = -1, b = -mean(dataconcat$V1,na.rm=T), c= 0))
+## Saturating model
+#satmod <- nls(V2 ~ a*V1 / (b + V1), data = dataconcat, start = list(a = 1, b = 1))
+
+## Choose and plot the best model
+#AICset <- c(AIC(linmod),AIC(quadmod),AIC(satmod))
+AICset <- c(AIC(linmod),AIC(quadmod))
+if(which(AICset == min(AICset)) == 1){
+  lines(xcoords, xcoords*summary(linmod)$parameters[1,1] + summary(linmod)$parameters[2,1], lwd=3, col = colvec[3])
+}
+if(which(AICset == min(AICset)) == 2){
+  lines(xcoords, summary(quadmod)$parameters[1,1]*(xcoords+summary(quadmod)$parameters[2,1])^2 + summary(quadmod)$parameters[3,1],col=colvec[3],lwd=3)
+}
+#if(which(AICset == min(AICset)) == 3){
+#  lines(xcoords, xcoords*summary(satmod)$parameters[1,1]/(xcoords + #summary(satmod)$parameters[2,1]),col=colvec[3],lwd=3)
+#}
+
+
+if(i == 18){
+  mtext(paste('Transcription percentage'),side=1,line=1.8,cex=.8)
+}
+}
+plot(1,1,type='n',xaxt='n',yaxt='n')
+legend(x='topleft',inset=c(.1,.2),legend=c(expression(italic('Mesodinium')),'Kleptokaryon'),pch=c(21,21),pt.cex=3,lwd=2, col=c('black',colvec[3]), pt.bg=c('gray50',colvec[3]),lty=c(1,1),cex=1.5)
+
+
+```
+
+
+# Export data
+```{r}
+write.csv(dat2, "output/physiology-all.csv")
+write.csv(subdat, "output/physiology-paired.csv")
+```
+
+```{r}
+sessionInfo()
+```

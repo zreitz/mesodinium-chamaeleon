@@ -1,0 +1,533 @@
+"org","desc","variable","value","treatment","replicate","times"
+"MC","Carbohydrate metabolism","X1",3.00039227658157,"1d","a",1
+"MC","Energy metabolism","X1",4.9281054491003,"1d","a",1
+"MC","Lipid metabolism","X1",1.22787134509519,"1d","a",1
+"MC","Nucleotide metabolism","X1",1.43166184845773,"1d","a",1
+"MC","Amino acid metabolism","X1",1.59203611414738,"1d","a",1
+"MC","Metabolism of other amino acids","X1",1.81491687414903,"1d","a",1
+"MC","Glycan biosynthesis and metabolism","X1",0.374582518104195,"1d","a",1
+"MC","Metabolism of cofactors and vitamins","X1",1.59410355403657,"1d","a",1
+"MC","Transcription","X1",1.45668592607748,"1d","a",1
+"MC","Translation","X1",20.0587045529054,"1d","a",1
+"MC","Folding, sorting and degradation","X1",8.99027578305628,"1d","a",1
+"MC","Replication and repair","X1",1.57498644752878,"1d","a",1
+"MC","Chromosome","X1",0.705453449979903,"1d","a",1
+"MC","Membrane transport","X1",0.62783047959504,"1d","a",1
+"MC","Signal transduction","X1",11.9995285163058,"1d","a",1
+"MC","Signaling molecules and interaction","X1",0.447479911599492,"1d","a",1
+"MC","Transport and catabolism","X1",9.08497526992844,"1d","a",1
+"MC","Cell motility","X1",5.84953924282833,"1d","a",1
+"MC","Cell growth and death","X1",7.73971629891744,"1d","a",1
+"MC","Carbohydrate metabolism","X2",3.10446988489413,"1d","b",1
+"MC","Energy metabolism","X2",5.10369736770947,"1d","b",1
+"MC","Lipid metabolism","X2",1.14486074537173,"1d","b",1
+"MC","Nucleotide metabolism","X2",1.30450889559412,"1d","b",1
+"MC","Amino acid metabolism","X2",1.63188685195601,"1d","b",1
+"MC","Metabolism of other amino acids","X2",1.65566595984247,"1d","b",1
+"MC","Glycan biosynthesis and metabolism","X2",0.349779739430399,"1d","b",1
+"MC","Metabolism of cofactors and vitamins","X2",1.54471029289015,"1d","b",1
+"MC","Transcription","X2",1.629598062185,"1d","b",1
+"MC","Translation","X2",21.6015168397201,"1d","b",1
+"MC","Folding, sorting and degradation","X2",9.03405577395831,"1d","b",1
+"MC","Replication and repair","X2",1.47916583537687,"1d","b",1
+"MC","Chromosome","X2",0.701544446980793,"1d","b",1
+"MC","Membrane transport","X2",0.549694385801239,"1d","b",1
+"MC","Signal transduction","X2",12.0694568701873,"1d","b",1
+"MC","Signaling molecules and interaction","X2",0.421420884740801,"1d","b",1
+"MC","Transport and catabolism","X2",9.92135677837243,"1d","b",1
+"MC","Cell motility","X2",6.77631657567883,"1d","b",1
+"MC","Cell growth and death","X2",7.62284471452614,"1d","b",1
+"MC","Carbohydrate metabolism","X3",3.13209725248757,"1d","c",1
+"MC","Energy metabolism","X3",5.05851676273569,"1d","c",1
+"MC","Lipid metabolism","X3",1.20497567253796,"1d","c",1
+"MC","Nucleotide metabolism","X3",1.30336999431772,"1d","c",1
+"MC","Amino acid metabolism","X3",1.62478347871653,"1d","c",1
+"MC","Metabolism of other amino acids","X3",1.68713324326924,"1d","c",1
+"MC","Glycan biosynthesis and metabolism","X3",0.359728564915755,"1d","c",1
+"MC","Metabolism of cofactors and vitamins","X3",1.5539043141735,"1d","c",1
+"MC","Transcription","X3",1.62191544929772,"1d","c",1
+"MC","Translation","X3",21.5813238704296,"1d","c",1
+"MC","Folding, sorting and degradation","X3",9.15598973006466,"1d","c",1
+"MC","Replication and repair","X3",1.47005926663293,"1d","c",1
+"MC","Chromosome","X3",0.69448137364269,"1d","c",1
+"MC","Membrane transport","X3",0.570917106182217,"1d","c",1
+"MC","Signal transduction","X3",12.1569493249077,"1d","c",1
+"MC","Signaling molecules and interaction","X3",0.422735586210276,"1d","c",1
+"MC","Transport and catabolism","X3",9.90966902343001,"1d","c",1
+"MC","Cell motility","X3",6.65426144358676,"1d","c",1
+"MC","Cell growth and death","X3",7.603549305907,"1d","c",1
+"MC","Carbohydrate metabolism","X4",3.62453126552642,"2d","a",2
+"MC","Energy metabolism","X4",5.89076920892987,"2d","a",2
+"MC","Lipid metabolism","X4",1.23053305915101,"2d","a",2
+"MC","Nucleotide metabolism","X4",1.25874989695749,"2d","a",2
+"MC","Amino acid metabolism","X4",1.88564684423434,"2d","a",2
+"MC","Metabolism of other amino acids","X4",1.77406207654508,"2d","a",2
+"MC","Glycan biosynthesis and metabolism","X4",0.357678927252111,"2d","a",2
+"MC","Metabolism of cofactors and vitamins","X4",1.6354060796452,"2d","a",2
+"MC","Transcription","X4",1.73193605611291,"2d","a",2
+"MC","Translation","X4",20.0037331897504,"2d","a",2
+"MC","Folding, sorting and degradation","X4",9.231998940063,"2d","a",2
+"MC","Replication and repair","X4",1.42502502283123,"2d","a",2
+"MC","Chromosome","X4",0.685061488050929,"2d","a",2
+"MC","Membrane transport","X4",0.552930479240452,"2d","a",2
+"MC","Signal transduction","X4",12.4641592615108,"2d","a",2
+"MC","Signaling molecules and interaction","X4",0.47357217944315,"2d","a",2
+"MC","Transport and catabolism","X4",11.0949577531926,"2d","a",2
+"MC","Cell motility","X4",7.58599598090619,"2d","a",2
+"MC","Cell growth and death","X4",8.01664519480701,"2d","a",2
+"MC","Carbohydrate metabolism","X5",3.74247506717172,"2d","b",2
+"MC","Energy metabolism","X5",5.83158862197727,"2d","b",2
+"MC","Lipid metabolism","X5",1.35474496894322,"2d","b",2
+"MC","Nucleotide metabolism","X5",1.30771488028525,"2d","b",2
+"MC","Amino acid metabolism","X5",1.90654569298195,"2d","b",2
+"MC","Metabolism of other amino acids","X5",1.86024328144415,"2d","b",2
+"MC","Glycan biosynthesis and metabolism","X5",0.386807846574025,"2d","b",2
+"MC","Metabolism of cofactors and vitamins","X5",1.7439731328952,"2d","b",2
+"MC","Transcription","X5",1.65249146363552,"2d","b",2
+"MC","Translation","X5",19.7258713735776,"2d","b",2
+"MC","Folding, sorting and degradation","X5",9.23218199521157,"2d","b",2
+"MC","Replication and repair","X5",1.45915081661983,"2d","b",2
+"MC","Chromosome","X5",0.688335098477652,"2d","b",2
+"MC","Membrane transport","X5",0.574690915188441,"2d","b",2
+"MC","Signal transduction","X5",12.3014924499544,"2d","b",2
+"MC","Signaling molecules and interaction","X5",0.488176433227319,"2d","b",2
+"MC","Transport and catabolism","X5",10.553074158999,"2d","b",2
+"MC","Cell motility","X5",6.98437155193756,"2d","b",2
+"MC","Cell growth and death","X5",7.67044452371555,"2d","b",2
+"MC","Carbohydrate metabolism","X6",3.6229031075953,"2d","c",2
+"MC","Energy metabolism","X6",5.7188578265773,"2d","c",2
+"MC","Lipid metabolism","X6",1.28620194884872,"2d","c",2
+"MC","Nucleotide metabolism","X6",1.40196245389906,"2d","c",2
+"MC","Amino acid metabolism","X6",1.84644878034462,"2d","c",2
+"MC","Metabolism of other amino acids","X6",1.830921636731,"2d","c",2
+"MC","Glycan biosynthesis and metabolism","X6",0.371882660921429,"2d","c",2
+"MC","Metabolism of cofactors and vitamins","X6",1.62741471544558,"2d","c",2
+"MC","Transcription","X6",1.73392649429246,"2d","c",2
+"MC","Translation","X6",19.1177577173864,"2d","c",2
+"MC","Folding, sorting and degradation","X6",9.35785884300532,"2d","c",2
+"MC","Replication and repair","X6",1.53114176573326,"2d","c",2
+"MC","Chromosome","X6",0.685349248907916,"2d","c",2
+"MC","Membrane transport","X6",0.591371008341792,"2d","c",2
+"MC","Signal transduction","X6",12.540888338987,"2d","c",2
+"MC","Signaling molecules and interaction","X6",0.496356071765456,"2d","c",2
+"MC","Transport and catabolism","X6",10.8252263317059,"2d","c",2
+"MC","Cell motility","X6",7.37017479160663,"2d","c",2
+"MC","Cell growth and death","X6",7.97439384151317,"2d","c",2
+"MC","Carbohydrate metabolism","X7",3.65456817708314,"7d","a",7
+"MC","Energy metabolism","X7",5.99835228995206,"7d","a",7
+"MC","Lipid metabolism","X7",1.40522407983363,"7d","a",7
+"MC","Nucleotide metabolism","X7",1.10117120590044,"7d","a",7
+"MC","Amino acid metabolism","X7",1.96894021335709,"7d","a",7
+"MC","Metabolism of other amino acids","X7",1.78908157396699,"7d","a",7
+"MC","Glycan biosynthesis and metabolism","X7",0.348286543732464,"7d","a",7
+"MC","Metabolism of cofactors and vitamins","X7",1.64838840670836,"7d","a",7
+"MC","Transcription","X7",1.91780599750239,"7d","a",7
+"MC","Translation","X7",18.2417455434168,"7d","a",7
+"MC","Folding, sorting and degradation","X7",9.07416348227909,"7d","a",7
+"MC","Replication and repair","X7",1.22028164832135,"7d","a",7
+"MC","Chromosome","X7",0.68791036806655,"7d","a",7
+"MC","Membrane transport","X7",0.863558504778765,"7d","a",7
+"MC","Signal transduction","X7",12.9944689589267,"7d","a",7
+"MC","Signaling molecules and interaction","X7",0.601228593492497,"7d","a",7
+"MC","Transport and catabolism","X7",11.2430947756083,"7d","a",7
+"MC","Cell motility","X7",7.14788189883067,"7d","a",7
+"MC","Cell growth and death","X7",8.16392297836613,"7d","a",7
+"MC","Carbohydrate metabolism","X8",3.73501993994404,"7d","b",7
+"MC","Energy metabolism","X8",6.08513126956097,"7d","b",7
+"MC","Lipid metabolism","X8",1.43599761709436,"7d","b",7
+"MC","Nucleotide metabolism","X8",1.14270383207544,"7d","b",7
+"MC","Amino acid metabolism","X8",1.9810349506158,"7d","b",7
+"MC","Metabolism of other amino acids","X8",1.83177574546851,"7d","b",7
+"MC","Glycan biosynthesis and metabolism","X8",0.355521284434131,"7d","b",7
+"MC","Metabolism of cofactors and vitamins","X8",1.69645454716411,"7d","b",7
+"MC","Transcription","X8",1.89890452201529,"7d","b",7
+"MC","Translation","X8",18.2095889913231,"7d","b",7
+"MC","Folding, sorting and degradation","X8",9.10082922631553,"7d","b",7
+"MC","Replication and repair","X8",1.25798595460754,"7d","b",7
+"MC","Chromosome","X8",0.70303544772103,"7d","b",7
+"MC","Membrane transport","X8",0.863416127192907,"7d","b",7
+"MC","Signal transduction","X8",12.9868867861994,"7d","b",7
+"MC","Signaling molecules and interaction","X8",0.623534350081718,"7d","b",7
+"MC","Transport and catabolism","X8",11.04457703042,"7d","b",7
+"MC","Cell motility","X8",6.94077002297218,"7d","b",7
+"MC","Cell growth and death","X8",8.18263111618333,"7d","b",7
+"MC","Carbohydrate metabolism","X9",4.04130799511241,"4d","a",4
+"MC","Energy metabolism","X9",6.34454062335588,"4d","a",4
+"MC","Lipid metabolism","X9",1.42332983159075,"4d","a",4
+"MC","Nucleotide metabolism","X9",1.25205863048161,"4d","a",4
+"MC","Amino acid metabolism","X9",2.06923853379239,"4d","a",4
+"MC","Metabolism of other amino acids","X9",1.83166272220785,"4d","a",4
+"MC","Glycan biosynthesis and metabolism","X9",0.364426865277737,"4d","a",4
+"MC","Metabolism of cofactors and vitamins","X9",1.68978216647616,"4d","a",4
+"MC","Transcription","X9",2.00879491498991,"4d","a",4
+"MC","Translation","X9",17.5849115452967,"4d","a",4
+"MC","Folding, sorting and degradation","X9",9.16532280868318,"4d","a",4
+"MC","Replication and repair","X9",1.366228006286,"4d","a",4
+"MC","Chromosome","X9",0.672797286806428,"4d","a",4
+"MC","Membrane transport","X9",0.800265286991512,"4d","a",4
+"MC","Signal transduction","X9",13.2601680493694,"4d","a",4
+"MC","Signaling molecules and interaction","X9",0.602482524133747,"4d","a",4
+"MC","Transport and catabolism","X9",11.528622032873,"4d","a",4
+"MC","Cell motility","X9",7.34899806175977,"4d","a",4
+"MC","Cell growth and death","X9",8.09267564552311,"4d","a",4
+"MC","Carbohydrate metabolism","X10",4.16832522603327,"4d","b",4
+"MC","Energy metabolism","X10",6.6092226812358,"4d","b",4
+"MC","Lipid metabolism","X10",1.41909940226393,"4d","b",4
+"MC","Nucleotide metabolism","X10",1.1382518347813,"4d","b",4
+"MC","Amino acid metabolism","X10",2.14117831913737,"4d","b",4
+"MC","Metabolism of other amino acids","X10",1.84648396325855,"4d","b",4
+"MC","Glycan biosynthesis and metabolism","X10",0.363699154789418,"4d","b",4
+"MC","Metabolism of cofactors and vitamins","X10",1.76579286775826,"4d","b",4
+"MC","Transcription","X10",1.85862854598901,"4d","b",4
+"MC","Translation","X10",18.5443359106473,"4d","b",4
+"MC","Folding, sorting and degradation","X10",8.98954452904552,"4d","b",4
+"MC","Replication and repair","X10",1.25722619039825,"4d","b",4
+"MC","Chromosome","X10",0.666364416045253,"4d","b",4
+"MC","Membrane transport","X10",0.701194162743956,"4d","b",4
+"MC","Signal transduction","X10",13.0308262899118,"4d","b",4
+"MC","Signaling molecules and interaction","X10",0.574461677458214,"4d","b",4
+"MC","Transport and catabolism","X10",11.6626948534466,"4d","b",4
+"MC","Cell motility","X10",7.6369457192801,"4d","b",4
+"MC","Cell growth and death","X10",7.95910450888093,"4d","b",4
+"MC","Carbohydrate metabolism","X11",3.71806209650598,"4d","c",4
+"MC","Energy metabolism","X11",6.1232846824911,"4d","c",4
+"MC","Lipid metabolism","X11",1.35434608785088,"4d","c",4
+"MC","Nucleotide metabolism","X11",1.20085532201971,"4d","c",4
+"MC","Amino acid metabolism","X11",1.98124264842606,"4d","c",4
+"MC","Metabolism of other amino acids","X11",1.86876101772297,"4d","c",4
+"MC","Glycan biosynthesis and metabolism","X11",0.369062318464686,"4d","c",4
+"MC","Metabolism of cofactors and vitamins","X11",1.72193597739782,"4d","c",4
+"MC","Transcription","X11",1.70498314715564,"4d","c",4
+"MC","Translation","X11",18.3140609301035,"4d","c",4
+"MC","Folding, sorting and degradation","X11",8.83555844204684,"4d","c",4
+"MC","Replication and repair","X11",1.30833268417126,"4d","c",4
+"MC","Chromosome","X11",0.685306223927189,"4d","c",4
+"MC","Membrane transport","X11",0.779352646626312,"4d","c",4
+"MC","Signal transduction","X11",12.7641878226348,"4d","c",4
+"MC","Signaling molecules and interaction","X11",0.602432353083679,"4d","c",4
+"MC","Transport and catabolism","X11",11.088106067412,"4d","c",4
+"MC","Cell motility","X11",7.05863520364637,"4d","c",4
+"MC","Cell growth and death","X11",8.03377115211295,"4d","c",4
+"MC","Carbohydrate metabolism","X12",3.20088363708758,"Starved","a",0
+"MC","Energy metabolism","X12",5.03011977928885,"Starved","a",0
+"MC","Lipid metabolism","X12",1.27379935507147,"Starved","a",0
+"MC","Nucleotide metabolism","X12",1.16741906198082,"Starved","a",0
+"MC","Amino acid metabolism","X12",1.71226255768391,"Starved","a",0
+"MC","Metabolism of other amino acids","X12",1.66746076407829,"Starved","a",0
+"MC","Glycan biosynthesis and metabolism","X12",0.322640020783942,"Starved","a",0
+"MC","Metabolism of cofactors and vitamins","X12",1.50558951906457,"Starved","a",0
+"MC","Transcription","X12",2.5720287894664,"Starved","a",0
+"MC","Translation","X12",16.4778887809854,"Starved","a",0
+"MC","Folding, sorting and degradation","X12",10.3383494086131,"Starved","a",0
+"MC","Replication and repair","X12",1.307959923805,"Starved","a",0
+"MC","Chromosome","X12",0.731256664746133,"Starved","a",0
+"MC","Membrane transport","X12",1.04536453225426,"Starved","a",0
+"MC","Signal transduction","X12",14.0313976849424,"Starved","a",0
+"MC","Signaling molecules and interaction","X12",0.689442722568568,"Starved","a",0
+"MC","Transport and catabolism","X12",11.672992283674,"Starved","a",0
+"MC","Cell motility","X12",6.71303109059134,"Starved","a",0
+"MC","Cell growth and death","X12",8.47536812087153,"Starved","a",0
+"MC","Carbohydrate metabolism","X13",3.19063801417921,"Starved","b",0
+"MC","Energy metabolism","X13",5.17870206827976,"Starved","b",0
+"MC","Lipid metabolism","X13",1.33245976139451,"Starved","b",0
+"MC","Nucleotide metabolism","X13",1.14135671036207,"Starved","b",0
+"MC","Amino acid metabolism","X13",1.70437897100829,"Starved","b",0
+"MC","Metabolism of other amino acids","X13",1.70113379513551,"Starved","b",0
+"MC","Glycan biosynthesis and metabolism","X13",0.327778516431617,"Starved","b",0
+"MC","Metabolism of cofactors and vitamins","X13",1.53120315368082,"Starved","b",0
+"MC","Transcription","X13",2.74351264137782,"Starved","b",0
+"MC","Translation","X13",17.2974017798687,"Starved","b",0
+"MC","Folding, sorting and degradation","X13",10.4634394705385,"Starved","b",0
+"MC","Replication and repair","X13",1.25567827011332,"Starved","b",0
+"MC","Chromosome","X13",0.729754986070949,"Starved","b",0
+"MC","Membrane transport","X13",1.01181748122682,"Starved","b",0
+"MC","Signal transduction","X13",13.9474508355855,"Starved","b",0
+"MC","Signaling molecules and interaction","X13",0.624081977553465,"Starved","b",0
+"MC","Transport and catabolism","X13",11.4583694346021,"Starved","b",0
+"MC","Cell motility","X13",6.29297888871315,"Starved","b",0
+"MC","Cell growth and death","X13",8.46100842422451,"Starved","b",0
+"MC","Carbohydrate metabolism","X14",3.23108112981429,"Starved","c",0
+"MC","Energy metabolism","X14",5.01471509783149,"Starved","c",0
+"MC","Lipid metabolism","X14",1.3670119440288,"Starved","c",0
+"MC","Nucleotide metabolism","X14",1.2152669074671,"Starved","c",0
+"MC","Amino acid metabolism","X14",1.71150882148033,"Starved","c",0
+"MC","Metabolism of other amino acids","X14",1.69556811880371,"Starved","c",0
+"MC","Glycan biosynthesis and metabolism","X14",0.35764665054478,"Starved","c",0
+"MC","Metabolism of cofactors and vitamins","X14",1.58546751467721,"Starved","c",0
+"MC","Transcription","X14",2.37316819113791,"Starved","c",0
+"MC","Translation","X14",16.5670311774012,"Starved","c",0
+"MC","Folding, sorting and degradation","X14",9.88783494421538,"Starved","c",0
+"MC","Replication and repair","X14",1.32485531852398,"Starved","c",0
+"MC","Chromosome","X14",0.707558140446476,"Starved","c",0
+"MC","Membrane transport","X14",1.07981797285481,"Starved","c",0
+"MC","Signal transduction","X14",13.6104437212185,"Starved","c",0
+"MC","Signaling molecules and interaction","X14",0.71095533937756,"Starved","c",0
+"MC","Transport and catabolism","X14",11.1787600851077,"Starved","c",0
+"MC","Cell motility","X14",6.27219089540234,"Starved","c",0
+"MC","Cell growth and death","X14",8.24255582251151,"Starved","c",0
+"KN","Carbohydrate metabolism","X1",8.95530323617331,"1d","a",1
+"KN","Energy metabolism","X1",7.12749743020192,"1d","a",1
+"KN","Lipid metabolism","X1",2.80551059229415,"1d","a",1
+"KN","Nucleotide metabolism","X1",0.856599359618134,"1d","a",1
+"KN","Amino acid metabolism","X1",4.27590769994211,"1d","a",1
+"KN","Metabolism of other amino acids","X1",1.17324574358732,"1d","a",1
+"KN","Glycan biosynthesis and metabolism","X1",0.765031841865851,"1d","a",1
+"KN","Metabolism of cofactors and vitamins","X1",2.06824438484351,"1d","a",1
+"KN","Transcription","X1",3.93622174699009,"1d","a",1
+"KN","Translation","X1",14.0364143341565,"1d","a",1
+"KN","Folding, sorting and degradation","X1",15.7555206351832,"1d","a",1
+"KN","Replication and repair","X1",2.76652055247705,"1d","a",1
+"KN","Chromosome","X1",0.559447995557498,"1d","a",1
+"KN","Membrane transport","X1",1.3038033011567,"1d","a",1
+"KN","Signal transduction","X1",11.0956201188605,"1d","a",1
+"KN","Signaling molecules and interaction","X1",0.165412290133157,"1d","a",1
+"KN","Transport and catabolism","X1",7.78442052530217,"1d","a",1
+"KN","Cell motility","X1",4.6203197183265,"1d","a",1
+"KN","Cell growth and death","X1",8.88204922197148,"1d","a",1
+"KN","Carbohydrate metabolism","X2",10.8299440441086,"1d","b",1
+"KN","Energy metabolism","X2",9.79097622713395,"1d","b",1
+"KN","Lipid metabolism","X2",2.75007735408038,"1d","b",1
+"KN","Nucleotide metabolism","X2",1.14633155263619,"1d","b",1
+"KN","Amino acid metabolism","X2",5.40024678747572,"1d","b",1
+"KN","Metabolism of other amino acids","X2",1.23654691385179,"1d","b",1
+"KN","Glycan biosynthesis and metabolism","X2",0.840643138599872,"1d","b",1
+"KN","Metabolism of cofactors and vitamins","X2",2.59909710080635,"1d","b",1
+"KN","Transcription","X2",2.80487759415762,"1d","b",1
+"KN","Translation","X2",15.4387560718293,"1d","b",1
+"KN","Folding, sorting and degradation","X2",13.1464657573058,"1d","b",1
+"KN","Replication and repair","X2",1.9243458454335,"1d","b",1
+"KN","Chromosome","X2",0.830950579130428,"1d","b",1
+"KN","Membrane transport","X2",1.11799945572551,"1d","b",1
+"KN","Signal transduction","X2",10.6640521608816,"1d","b",1
+"KN","Signaling molecules and interaction","X2",0.173720488952346,"1d","b",1
+"KN","Transport and catabolism","X2",11.9147651231887,"1d","b",1
+"KN","Cell motility","X2",7.88228759315109,"1d","b",1
+"KN","Cell growth and death","X2",11.8681662795856,"1d","b",1
+"KN","Carbohydrate metabolism","X3",11.5165928899398,"1d","c",1
+"KN","Energy metabolism","X3",10.7492232822853,"1d","c",1
+"KN","Lipid metabolism","X3",3.03373566852712,"1d","c",1
+"KN","Nucleotide metabolism","X3",1.04423854169531,"1d","c",1
+"KN","Amino acid metabolism","X3",5.61903714497814,"1d","c",1
+"KN","Metabolism of other amino acids","X3",1.38764400208958,"1d","c",1
+"KN","Glycan biosynthesis and metabolism","X3",0.762145665502736,"1d","c",1
+"KN","Metabolism of cofactors and vitamins","X3",2.62819279095983,"1d","c",1
+"KN","Transcription","X3",3.06040526793324,"1d","c",1
+"KN","Translation","X3",14.0037392428033,"1d","c",1
+"KN","Folding, sorting and degradation","X3",13.8492205328421,"1d","c",1
+"KN","Replication and repair","X3",2.03101371972176,"1d","c",1
+"KN","Chromosome","X3",0.766544774683127,"1d","c",1
+"KN","Membrane transport","X3",1.23559979104231,"1d","c",1
+"KN","Signal transduction","X3",11.485799125677,"1d","c",1
+"KN","Signaling molecules and interaction","X3",0.159467707789173,"1d","c",1
+"KN","Transport and catabolism","X3",11.6477413323802,"1d","c",1
+"KN","Cell motility","X3",7.41414863490143,"1d","c",1
+"KN","Cell growth and death","X3",11.5424376563746,"1d","c",1
+"KN","Carbohydrate metabolism","X4",11.3816104091398,"2d","a",2
+"KN","Energy metabolism","X4",11.0642720706327,"2d","a",2
+"KN","Lipid metabolism","X4",2.90193194917058,"2d","a",2
+"KN","Nucleotide metabolism","X4",1.67708336212783,"2d","a",2
+"KN","Amino acid metabolism","X4",8.09986759140754,"2d","a",2
+"KN","Metabolism of other amino acids","X4",1.67017268402445,"2d","a",2
+"KN","Glycan biosynthesis and metabolism","X4",0.887331068473763,"2d","a",2
+"KN","Metabolism of cofactors and vitamins","X4",4.93588272855686,"2d","a",2
+"KN","Transcription","X4",2.43836366199597,"2d","a",2
+"KN","Translation","X4",14.9876022434825,"2d","a",2
+"KN","Folding, sorting and degradation","X4",10.4575145331561,"2d","a",2
+"KN","Replication and repair","X4",1.54633333241191,"2d","a",2
+"KN","Chromosome","X4",0.780630198557603,"2d","a",2
+"KN","Membrane transport","X4",1.02278035929998,"2d","a",2
+"KN","Signal transduction","X4",10.6529485099196,"2d","a",2
+"KN","Signaling molecules and interaction","X4",0.130750029715916,"2d","a",2
+"KN","Transport and catabolism","X4",13.9919117423478,"2d","a",2
+"KN","Cell motility","X4",10.6739569713539,"2d","a",2
+"KN","Cell growth and death","X4",14.3805682788818,"2d","a",2
+"KN","Carbohydrate metabolism","X5",11.4408234002975,"2d","b",2
+"KN","Energy metabolism","X5",10.4747094242723,"2d","b",2
+"KN","Lipid metabolism","X5",3.0229197828786,"2d","b",2
+"KN","Nucleotide metabolism","X5",1.52162951223956,"2d","b",2
+"KN","Amino acid metabolism","X5",6.89457916837926,"2d","b",2
+"KN","Metabolism of other amino acids","X5",1.55086717204032,"2d","b",2
+"KN","Glycan biosynthesis and metabolism","X5",0.840264918621847,"2d","b",2
+"KN","Metabolism of cofactors and vitamins","X5",3.95937236490294,"2d","b",2
+"KN","Transcription","X5",2.68393242286978,"2d","b",2
+"KN","Translation","X5",14.7722216807841,"2d","b",2
+"KN","Folding, sorting and degradation","X5",10.8992910926834,"2d","b",2
+"KN","Replication and repair","X5",1.89748174764933,"2d","b",2
+"KN","Chromosome","X5",0.855519349822243,"2d","b",2
+"KN","Membrane transport","X5",1.20679500163138,"2d","b",2
+"KN","Signal transduction","X5",11.1603113598902,"2d","b",2
+"KN","Signaling molecules and interaction","X5",0.130933867803404,"2d","b",2
+"KN","Transport and catabolism","X5",12.8624516413344,"2d","b",2
+"KN","Cell motility","X5",9.41198405064471,"2d","b",2
+"KN","Cell growth and death","X5",13.3645766683475,"2d","b",2
+"KN","Carbohydrate metabolism","X6",11.4508693379646,"2d","c",2
+"KN","Energy metabolism","X6",9.9818306014707,"2d","c",2
+"KN","Lipid metabolism","X6",3.0785653642038,"2d","c",2
+"KN","Nucleotide metabolism","X6",1.28374958863044,"2d","c",2
+"KN","Amino acid metabolism","X6",6.41238727091209,"2d","c",2
+"KN","Metabolism of other amino acids","X6",1.59127426389046,"2d","c",2
+"KN","Glycan biosynthesis and metabolism","X6",0.763833770744779,"2d","c",2
+"KN","Metabolism of cofactors and vitamins","X6",3.50943177072819,"2d","c",2
+"KN","Transcription","X6",3.10981562347033,"2d","c",2
+"KN","Translation","X6",13.4312508123685,"2d","c",2
+"KN","Folding, sorting and degradation","X6",12.490424422769,"2d","c",2
+"KN","Replication and repair","X6",2.08104602637743,"2d","c",2
+"KN","Chromosome","X6",0.683910541293208,"2d","c",2
+"KN","Membrane transport","X6",1.16400301993656,"2d","c",2
+"KN","Signal transduction","X6",11.4511458889316,"2d","c",2
+"KN","Signaling molecules and interaction","X6",0.118087262892115,"2d","c",2
+"KN","Transport and catabolism","X6",13.8269952460889,"2d","c",2
+"KN","Cell motility","X6",10.08470756118,"2d","c",2
+"KN","Cell growth and death","X6",14.217485211437,"2d","c",2
+"KN","Carbohydrate metabolism","X7",6.35310571557013,"7d","a",7
+"KN","Energy metabolism","X7",9.17002311293552,"7d","a",7
+"KN","Lipid metabolism","X7",1.43059535107595,"7d","a",7
+"KN","Nucleotide metabolism","X7",0.86071845356752,"7d","a",7
+"KN","Amino acid metabolism","X7",3.29552317423702,"7d","a",7
+"KN","Metabolism of other amino acids","X7",0.578277473288439,"7d","a",7
+"KN","Glycan biosynthesis and metabolism","X7",0.62096147995441,"7d","a",7
+"KN","Metabolism of cofactors and vitamins","X7",1.87287431376378,"7d","a",7
+"KN","Transcription","X7",2.10082507276715,"7d","a",7
+"KN","Translation","X7",23.8712577705326,"7d","a",7
+"KN","Folding, sorting and degradation","X7",8.63147809266062,"7d","a",7
+"KN","Replication and repair","X7",1.15655494657688,"7d","a",7
+"KN","Chromosome","X7",0.934734337467022,"7d","a",7
+"KN","Membrane transport","X7",1.33841606008455,"7d","a",7
+"KN","Signal transduction","X7",9.90223546132784,"7d","a",7
+"KN","Signaling molecules and interaction","X7",0.137133723543862,"7d","a",7
+"KN","Transport and catabolism","X7",14.5227791829191,"7d","a",7
+"KN","Cell motility","X7",10.7309409098959,"7d","a",7
+"KN","Cell growth and death","X7",13.8216716691717,"7d","a",7
+"KN","Carbohydrate metabolism","X8",6.04662862657827,"7d","b",7
+"KN","Energy metabolism","X8",8.50896714229611,"7d","b",7
+"KN","Lipid metabolism","X8",1.41713446734892,"7d","b",7
+"KN","Nucleotide metabolism","X8",0.777486017315684,"7d","b",7
+"KN","Amino acid metabolism","X8",3.02241593063459,"7d","b",7
+"KN","Metabolism of other amino acids","X8",0.523628747218222,"7d","b",7
+"KN","Glycan biosynthesis and metabolism","X8",0.549553503820693,"7d","b",7
+"KN","Metabolism of cofactors and vitamins","X8",1.71231733955527,"7d","b",7
+"KN","Transcription","X8",2.21387154154763,"7d","b",7
+"KN","Translation","X8",25.4999499472521,"7d","b",7
+"KN","Folding, sorting and degradation","X8",8.79542286871549,"7d","b",7
+"KN","Replication and repair","X8",1.27801349627428,"7d","b",7
+"KN","Chromosome","X8",1.02415622617682,"7d","b",7
+"KN","Membrane transport","X8",1.33679338995711,"7d","b",7
+"KN","Signal transduction","X8",9.83497994039873,"7d","b",7
+"KN","Signaling molecules and interaction","X8",0.1350140789396,"7d","b",7
+"KN","Transport and catabolism","X8",13.7855534935535,"7d","b",7
+"KN","Cell motility","X8",10.0824201915352,"7d","b",7
+"KN","Cell growth and death","X8",13.2680850845378,"7d","b",7
+"KN","Carbohydrate metabolism","X9",7.96443133349618,"4d","a",4
+"KN","Energy metabolism","X9",9.74662257379606,"4d","a",4
+"KN","Lipid metabolism","X9",1.83104413671295,"4d","a",4
+"KN","Nucleotide metabolism","X9",1.07570319986472,"4d","a",4
+"KN","Amino acid metabolism","X9",4.2830837451382,"4d","a",4
+"KN","Metabolism of other amino acids","X9",0.812179402867289,"4d","a",4
+"KN","Glycan biosynthesis and metabolism","X9",0.70930647676669,"4d","a",4
+"KN","Metabolism of cofactors and vitamins","X9",2.22938313823491,"4d","a",4
+"KN","Transcription","X9",2.92882508784127,"4d","a",4
+"KN","Translation","X9",21.151425189305,"4d","a",4
+"KN","Folding, sorting and degradation","X9",7.84135961368633,"4d","a",4
+"KN","Replication and repair","X9",1.90432348133256,"4d","a",4
+"KN","Chromosome","X9",0.863850735611883,"4d","a",4
+"KN","Membrane transport","X9",1.10341782379136,"4d","a",4
+"KN","Signal transduction","X9",9.14864433212454,"4d","a",4
+"KN","Signaling molecules and interaction","X9",0.16346930722835,"4d","a",4
+"KN","Transport and catabolism","X9",13.5308430882546,"4d","a",4
+"KN","Cell motility","X9",10.9125157362695,"4d","a",4
+"KN","Cell growth and death","X9",14.547828864546,"4d","a",4
+"KN","Carbohydrate metabolism","X10",8.4331841797579,"4d","b",4
+"KN","Energy metabolism","X10",10.7513647991701,"4d","b",4
+"KN","Lipid metabolism","X10",1.94456409940837,"4d","b",4
+"KN","Nucleotide metabolism","X10",1.17887000782397,"4d","b",4
+"KN","Amino acid metabolism","X10",5.03107610348738,"4d","b",4
+"KN","Metabolism of other amino acids","X10",0.910745211115311,"4d","b",4
+"KN","Glycan biosynthesis and metabolism","X10",0.731409281513455,"4d","b",4
+"KN","Metabolism of cofactors and vitamins","X10",2.79904705809957,"4d","b",4
+"KN","Transcription","X10",2.00170544952661,"4d","b",4
+"KN","Translation","X10",21.0280168435118,"4d","b",4
+"KN","Folding, sorting and degradation","X10",7.76155354144506,"4d","b",4
+"KN","Replication and repair","X10",1.18941918015349,"4d","b",4
+"KN","Chromosome","X10",0.853164312150009,"4d","b",4
+"KN","Membrane transport","X10",1.15601346777667,"4d","b",4
+"KN","Signal transduction","X10",9.19843872249523,"4d","b",4
+"KN","Signaling molecules and interaction","X10",0.132304202966076,"4d","b",4
+"KN","Transport and catabolism","X10",15.9534254041652,"4d","b",4
+"KN","Cell motility","X10",12.84537550658,"4d","b",4
+"KN","Cell growth and death","X10",15.9674909672712,"4d","b",4
+"KN","Carbohydrate metabolism","X11",7.55754756533371,"4d","c",4
+"KN","Energy metabolism","X11",8.72447044261215,"4d","c",4
+"KN","Lipid metabolism","X11",1.90028416086034,"4d","c",4
+"KN","Nucleotide metabolism","X11",0.982917074274458,"4d","c",4
+"KN","Amino acid metabolism","X11",3.87776424630824,"4d","c",4
+"KN","Metabolism of other amino acids","X11",0.755322193162837,"4d","c",4
+"KN","Glycan biosynthesis and metabolism","X11",0.71905341824885,"4d","c",4
+"KN","Metabolism of cofactors and vitamins","X11",2.17080263797108,"4d","c",4
+"KN","Transcription","X11",2.33950235247925,"4d","c",4
+"KN","Translation","X11",21.940279635582,"4d","c",4
+"KN","Folding, sorting and degradation","X11",8.57906260190195,"4d","c",4
+"KN","Replication and repair","X11",1.48635428936493,"4d","c",4
+"KN","Chromosome","X11",0.919363532911418,"4d","c",4
+"KN","Membrane transport","X11",1.29402996000453,"4d","c",4
+"KN","Signal transduction","X11",9.3473616961808,"4d","c",4
+"KN","Signaling molecules and interaction","X11",0.148069769144257,"4d","c",4
+"KN","Transport and catabolism","X11",14.2186907304997,"4d","c",4
+"KN","Cell motility","X11",11.1857560209494,"4d","c",4
+"KN","Cell growth and death","X11",14.5893642649417,"4d","c",4
+"KN","Carbohydrate metabolism","X12",9.83756877128635,"Starved","a",0
+"KN","Energy metabolism","X12",12.8509756125343,"Starved","a",0
+"KN","Lipid metabolism","X12",1.59868323632263,"Starved","a",0
+"KN","Nucleotide metabolism","X12",0.894169106172614,"Starved","a",0
+"KN","Amino acid metabolism","X12",3.76860953856318,"Starved","a",0
+"KN","Metabolism of other amino acids","X12",0.779123144741488,"Starved","a",0
+"KN","Glycan biosynthesis and metabolism","X12",0.588329099793829,"Starved","a",0
+"KN","Metabolism of cofactors and vitamins","X12",2.4751967741568,"Starved","a",0
+"KN","Transcription","X12",2.43532936177968,"Starved","a",0
+"KN","Translation","X12",18.2382020936087,"Starved","a",0
+"KN","Folding, sorting and degradation","X12",9.90135663108975,"Starved","a",0
+"KN","Replication and repair","X12",1.63968971762481,"Starved","a",0
+"KN","Chromosome","X12",0.971625793076739,"Starved","a",0
+"KN","Membrane transport","X12",1.13337358043535,"Starved","a",0
+"KN","Signal transduction","X12",10.9065849574558,"Starved","a",0
+"KN","Signaling molecules and interaction","X12",0.165164994133795,"Starved","a",0
+"KN","Transport and catabolism","X12",14.8967434019433,"Starved","a",0
+"KN","Cell motility","X12",10.319394926587,"Starved","a",0
+"KN","Cell growth and death","X12",13.3903247485505,"Starved","a",0
+"KN","Carbohydrate metabolism","X13",10.2434336599207,"Starved","b",0
+"KN","Energy metabolism","X13",12.9620889462581,"Starved","b",0
+"KN","Lipid metabolism","X13",1.57853735094593,"Starved","b",0
+"KN","Nucleotide metabolism","X13",0.792111862344264,"Starved","b",0
+"KN","Amino acid metabolism","X13",3.60459231543452,"Starved","b",0
+"KN","Metabolism of other amino acids","X13",0.736385399666779,"Starved","b",0
+"KN","Glycan biosynthesis and metabolism","X13",0.571480561131361,"Starved","b",0
+"KN","Metabolism of cofactors and vitamins","X13",2.38827697189225,"Starved","b",0
+"KN","Transcription","X13",2.06984004230662,"Starved","b",0
+"KN","Translation","X13",21.1066820577849,"Starved","b",0
+"KN","Folding, sorting and degradation","X13",9.99778231424039,"Starved","b",0
+"KN","Replication and repair","X13",1.38974974269159,"Starved","b",0
+"KN","Chromosome","X13",1.05311641712963,"Starved","b",0
+"KN","Membrane transport","X13",1.05254777975537,"Starved","b",0
+"KN","Signal transduction","X13",11.1083311061703,"Starved","b",0
+"KN","Signaling molecules and interaction","X13",0.134767057699634,"Starved","b",0
+"KN","Transport and catabolism","X13",13.2236621384177,"Starved","b",0
+"KN","Cell motility","X13",9.1618853740781,"Starved","b",0
+"KN","Cell growth and death","X13",11.7275772067395,"Starved","b",0
+"KN","Carbohydrate metabolism","X14",8.50902447578113,"Starved","c",0
+"KN","Energy metabolism","X14",10.886462062947,"Starved","c",0
+"KN","Lipid metabolism","X14",1.46030943390071,"Starved","c",0
+"KN","Nucleotide metabolism","X14",0.799683552046717,"Starved","c",0
+"KN","Amino acid metabolism","X14",3.27743840275342,"Starved","c",0
+"KN","Metabolism of other amino acids","X14",0.617807537659753,"Starved","c",0
+"KN","Glycan biosynthesis and metabolism","X14",0.604758137524366,"Starved","c",0
+"KN","Metabolism of cofactors and vitamins","X14",2.16375365994894,"Starved","c",0
+"KN","Transcription","X14",2.66207762761906,"Starved","c",0
+"KN","Translation","X14",19.5386221464632,"Starved","c",0
+"KN","Folding, sorting and degradation","X14",10.6324065540612,"Starved","c",0
+"KN","Replication and repair","X14",1.90398903850389,"Starved","c",0
+"KN","Chromosome","X14",0.98115177267945,"Starved","c",0
+"KN","Membrane transport","X14",1.08840153004217,"Starved","c",0
+"KN","Signal transduction","X14",10.5863258598331,"Starved","c",0
+"KN","Signaling molecules and interaction","X14",0.160262945412728,"Starved","c",0
+"KN","Transport and catabolism","X14",11.92674392999,"Starved","c",0
+"KN","Cell motility","X14",8.35773299296148,"Starved","c",0
+"KN","Cell growth and death","X14",11.5511658823433,"Starved","c",0

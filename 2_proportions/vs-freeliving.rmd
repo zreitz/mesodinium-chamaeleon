@@ -1,0 +1,112 @@
+---
+title: "Comparing fractions of total counts - freeliving vs kleptokaryon"
+author: Zach Reitz
+date: "2025-08-26"
+output:
+  html_document
+---
+
+```{r, eval = FALSE, echo = FALSE}
+# For interactive
+.vsc.attach()
+setwd("code/2_proportions")
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(DESeq2)
+library(Rmisc)
+library(cowplot)
+library(scales)
+library(grid)
+library(gridExtra)
+library(ggpubr) # T-test on plot
+```
+
+## Load data
+```{r}
+counts <- readRDS("../1_counts_processing/output/prey_combo_counts.Rda")
+metadata <- readRDS("../1_counts_processing/output/prey_combo_metadata.Rda")
+kegg_ontology <- readRDS("../0_databases/output/kegg_ontology.Rda")
+kegg_lookup <- readRDS("../0_databases/output/kegg_lookup.Rda")
+```
+
+# Break into subcategories
+```{r}
+library_size <- colSums(counts)
+
+# Get genes in each subcategory
+in_cat <- split(kegg_ontology$D, kegg_ontology$B)
+in_cat <- sapply(in_cat, function(x) {
+  unique(x[x %in% rownames(counts)])
+})
+
+sum_by_cat <- sapply(in_cat, function(cat) {
+  colSums(counts[cat, ])
+})
+
+sum_by_cat <- as.data.frame(t(sum_by_cat))
+
+## Convert to fraction
+proportions <- data.frame(sapply(seq_len(ncol(counts)), function(i) {
+  sum_by_cat[,i] / library_size[i] * 100
+}))
+
+rownames(proportions) <- rownames(sum_by_cat)
+colnames(proportions) <- colnames(counts)
+
+proportions$desc <- kegg_lookup[rownames(proportions), "Description"]
+```
+
+
+```{r}
+trash_cats <- c( 
+    "Metabolism of terpenoids and polyketides", 
+    "Biosynthesis of other secondary metabolites",
+    "Xenobiotics biodegradation and metabolism",
+    "Not included in regular maps",
+    "Information processing in viruses",
+    "Cellular community - eukaryotes",
+    "Cellular community - prokaryotes"
+  )
+
+# Remove some useless categories
+proportions_filtered <- proportions[!proportions$desc %in% trash_cats, ]
+
+# Longify
+df2 <- reshape2::melt(as.data.frame(proportions_filtered), id.vars = "desc")
+
+df2 <- within(df2, {
+  value <- as.numeric(value)
+  replicate <- metadata[variable, "replicate"]
+  treatment <- as.character(metadata[variable, "condition"])
+  treatment[treatment == "SM_10uE_Light"] <- "Freeliving"
+  treatment <- factor(treatment, levels = c("Starved", "1d", "2d", "4d", "7d", "Freeliving"))
+  group <- metadata[variable, "group"]
+  desc <- factor(desc, levels = proportions_filtered$desc)
+})
+```
+
+## Add t test and plot
+```{r, fig.width = 10, fig.height = 8}
+colors <- c('#FFF7ECFF', '#7F0000FF', '#D7301FFF', '#FC8D59FF', '#FDD49EFF')
+
+ggplot(df2, aes(x = group, y = value)) +
+  ggbeeswarm::geom_beeswarm(size = 2, cex = 6, priority = "density", color = "black", aes(fill = treatment, shape = treatment)) +
+  stat_compare_means(method = "t.test", label = "p.signif", label.x = 1.5) +
+  facet_wrap(vars(desc), scales = "free_y", dir = "v", nrow = 4,
+             labeller = labeller(desc = label_wrap_gen(25))) +
+  scale_x_discrete(labels = c("Freeliving", "Kleptokaryon")) +
+  scale_y_continuous(expand = expansion(mult = c(0.1, 0.2))) +
+  scale_fill_manual(values = c(colors, "black")) +
+  scale_shape_manual(values = c(21:25, 19)) +
+  labs(x = "", y = "Percent of total reads in category", fill = "Treatment", shape = "Treatment") +
+  theme_bw() +
+  theme(legend.position = c(1, 0),
+         legend.key.size = unit(0.8, "lines"),
+        legend.justification = c(1, 0))
+```
+
+```{r}
+sessionInfo()
+```

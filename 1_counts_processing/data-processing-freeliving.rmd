@@ -1,0 +1,144 @@
+---
+title: "RNA-Seq data processing - freeliving samples"
+author: Zach Reitz
+date: "2025-08-26"
+output:
+  html_document
+---
+
+Internally SM (Storatula major)
+
+```{r, eval = FALSE, echo = FALSE}
+# For interactive
+setwd("code/1_counts_processing")
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(DESeq2)
+require(reshape2)
+```
+
+
+## Load metadata
+```{r}
+metadata <- read.csv("input/sm_meta.csv", header=T)
+metadata$shortName <- sub("-.*", "", metadata$countsFile)
+rownames(metadata) <- metadata$sampleName
+metadata <- metadata[order(metadata$sampleName), ]
+
+saveRDS(metadata, "output/sm_metadata.Rda")
+```
+
+
+## Process .sf files
+```{r}
+# Get list of sf files
+sf_files <- list.files(paste0("input/sm_quantReads"),
+                        pattern = "sf", full.names = TRUE)
+names <- basename(sf_files)
+
+# Read in the files
+sf <- lapply(sf_files, read.table, sep = "\t", skip = 1)
+# Get KOs
+kos <- sf[[1]][,1]
+
+# Get counts
+counts <- sapply(sf, function(x) x[,5])
+rownames(counts) <- kos
+colnames(counts) <- rownames(metadata)[match(names, metadata$countsFile)]
+counts <- counts[, order(colnames(counts))]
+
+counts <- as.data.frame(round(counts))
+
+# Save as csv
+write.csv(counts, paste0("output/sm_raw_counts.csv"), 
+          quote=FALSE)
+saveRDS(counts, "output/sm_counts.Rda")
+```
+
+## Protein filtering
+```{r}
+# Filter low counts
+
+per_treat <- split.default(counts, metadata$groupName)
+# Check if consistently expressed for each treatment
+expr_in_treat <- sapply(per_treat, function(y) {
+  rowSums(y < 10) == 0
+})
+# Keep if expressed in at least one treatment
+expressed <- counts[rowSums(expr_in_treat) > 0, ]
+
+print("Proteins before filtering:")
+nrow(counts)
+print("Proteins after filtering:")
+nrow(expressed)
+```
+
+## DESeq normalization with rlog()
+```{r}
+dds <- DESeqDataSetFromMatrix(
+  countData = expressed,
+  colData = metadata,
+  design = ~ groupName
+)
+
+saveRDS(dds, "output/sm_deseq_dataset.Rda")
+
+logged <- rlog(dds, blind = FALSE)
+```
+
+## Expression level density plots
+```{r}
+# Plot densities
+df <- reshape2::melt(assay(logged))
+df <- within(df, {
+  replicate <- factor(metadata[Var2, "conditionNumber"])
+  treatment <- factor(metadata[Var2, "groupName"])
+})
+
+print(
+  ggplot(df, aes(x = value, group = Var2, 
+                  color = treatment, linetype = replicate)) +
+    ggtitle(paste("Transformed counts for freeliving SM")) +
+    geom_density() +
+    xlab("Transformed expression level") +
+    theme_bw()
+)
+```
+
+## PCA plot
+Taken from DESeq2::plotPCA() and modified, as suggested in docs
+```{r}
+# calculate the variance for each gene
+rv <- rowVars(assay(logged))
+# select the ntop genes by variance
+select <- order(rv, decreasing = T)[seq_len(500)]
+# Perform PCA
+pca <- prcomp(t(assay(logged)[select,]))
+# the contribution to the total variance for each component
+percentVar <- pca$sdev^2 / sum( pca$sdev^2 )
+# assemble the data for the plot
+pcs <- c("PC1", "PC2")
+d <- data.frame(V1=pca$x[,1],
+                V2=pca$x[,2],
+                name=colnames(logged), 
+                colData(logged))
+colnames(d)[1:2] <- pcs
+
+# Plot
+print(
+  ggplot(data=d, aes(x=PC1, y=PC2, color=groupName, label = shortName)) +
+    geom_text(size=5) + 
+    xlab(paste0(pcs[1],": ",round(percentVar[1] * 100),"% variance")) +
+    ylab(paste0(pcs[2],": ",round(percentVar[2] * 100),"% variance")) +
+    ggtitle(paste0("PCA plot for transformed SM protein counts")) +
+    theme_bw() + 
+    theme(aspect.ratio = 1)
+)
+```
+
+
+```{r}
+sessionInfo()
+```

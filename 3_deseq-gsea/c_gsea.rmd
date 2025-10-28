@@ -1,0 +1,249 @@
+---
+title: "GSEA"
+author: Zach
+date: "2025-08-20"
+output:
+  html_document
+---
+
+```{r, eval = FALSE, echo = FALSE}
+# For interactive
+setwd("code/3_deseq-gsea")
+```
+
+```{r}
+library(DESeq2)
+library(ggplot2)
+library(clusterProfiler)
+library(corrplot)
+require(scales)
+library(data.table)
+library(patchwork)
+library(ggtext)
+```
+
+## Load data
+```{r}
+lfc_list <- readRDS("output/lfc_vs_starved.Rda")
+
+kegg_ontology <- readRDS("../0_databases/output/kegg_ontology.Rda")
+kegg_lookup <- readRDS("../0_databases/output/kegg_lookup.Rda")
+
+trash_cats <- c( 
+    "Xenobiotics biodegradation and metabolism",
+    "Not included in regular maps",
+    "Information processing in viruses",
+    "Cellular community - prokaryotes"
+  )
+trash_cats <- rownames(subset(kegg_lookup, Description %in% trash_cats))
+
+kegg_ontology <- subset(kegg_ontology, ! B %in% trash_cats)
+```
+
+## GSEA
+```{r}
+# Run GSEA with a given annotation set
+run_gsea <- function(lfc, term2gene, term2name) {
+  lapply(1:4, function(i) {
+    ranks <- lfc[, i]
+    ranks <- sort(ranks, decreasing = T)
+
+    set.seed(93117)
+    GSEA(
+      geneList = ranks,
+      TERM2GENE = term2gene,
+      TERM2NAME = term2name,
+      minGSSize = 5,
+      maxGSSize = 1000,
+      verbose = FALSE,
+      seed = TRUE,
+      pvalueCutoff = 1
+    )
+  })
+}
+
+# Combine GSEAs and make a summary plot
+plot_gsea <- function(gse_list, show_legend = TRUE, ontology = FALSE) {
+  tabs <- list()
+  for (gses in gse_list) {
+    # Sort by name
+    gse_dfs <- lapply(gses, function(x) x[order(x$ID), ])
+
+    nes <- sapply(gse_dfs, getElement, "NES")
+    dimnames(nes) <- list(gse_dfs[[1]]$Description, c("1d", "2d", "4d", "7d"))
+
+    qvals <- sapply(gse_dfs, getElement, "qvalue")
+    dimnames(qvals) <- dimnames(nes)
+    colnames(qvals) <- paste0(colnames(qvals), ".pval")
+
+    tabs <- c(tabs, list(cbind(nes, qvals)))
+
+    # Filter
+    keeps <- rowSums(qvals < 0.05) > 0
+    nes <- nes[keeps, ]
+    qvals <- qvals[keeps, ]
+
+
+    df <- reshape2::melt(nes)
+    colnames(df) <- c("cat", "time", "value")
+    df$cat <- factor(df$cat, levels = sort(as.character(unique(df$cat)), decreasing = T))
+
+    legend <- ifelse(show_legend, list(), list(
+      theme(legend.position = "none")
+      ))
+    scale_y <- ifelse(ontology, list(
+        scale_y_discrete(position = "right", 
+                         breaks = levels(df$cat),
+                         labels = sub(".* \\|", "... ", levels(df$cat))
+          )
+      ), list(
+        scale_y_discrete(position = "right")
+      ))
+
+
+    print(ggplot(df, aes(x = time, y = cat, fill = value)) +
+      geom_tile(color = "white") +
+      theme_bw() +
+      scale_fill_gradientn(
+        colors = c('#364B9A', '#4A7BB7', '#6EA6CD', '#98CAE1', '#C2E4EF', 'white', 'white', '#FEDA8B', '#FDB366', '#F67E4B', '#DD3D2D', '#A50026'),
+        values = c(0, 0.1, 0.15, 0.2, 0.25, 0.3, 0.7, 0.75, 0.8, 0.85, 0.9, 1),
+        limits = c(-2.5, 2.5),
+        na.value = "white",
+        oob = scales::squish
+        ) +
+      scale_x_discrete(expand = c(0,0), position = "top") +
+      scale_y +
+      coord_equal() +
+      labs(x = NULL, y = NULL, fill = "Enrichment\nvs. Starved") +
+      legend
+    )
+  }
+  return(tabs)
+}
+```
+
+### Combine subcategory and path levels
+```{r}
+term2gene1 <- unique(kegg_ontology[c("B","D")])
+term2gene2 <- unique(kegg_ontology[c("C","D")])
+colnames(term2gene2) <- c("B", "D")
+term2gene <- rbind(term2gene1, term2gene2)
+
+term2name1 <- unique(kegg_ontology["B"])
+term2name1 <- within(term2name1, {
+  name <-  sub(" \\[.*", "", kegg_lookup[B, "Description"])
+})
+colnames(term2name1) <- c("term", "name")
+
+paths <- unique(kegg_ontology[c("B", "C")])
+paths <- within(paths, {
+  B_name <- kegg_lookup[B, "Description"]
+  C_name <-  sub(" \\[.*", "", kegg_lookup[C, "Description"])
+  name <- paste(B_name, "|", C_name)
+})
+term2name2 <- paths[, c("C", "name")]
+colnames(term2name2) <- c("term", "name")
+
+term2name <- rbind(term2name1, term2name2)
+```
+
+```{r, fig.width = 10}
+outpath <- "output/gsea_kegg_results.Rda"
+if (!file.exists(outpath)) {
+  gse_list <- lapply(lfc_list, run_gsea, term2gene, term2name)
+  saveRDS(gse_list, outpath)
+} else {
+  gse_list <- readRDS(outpath)
+}
+```
+
+```{r}
+tabs <- plot_gsea(gse_list)
+
+# Generate csv for manual messing with
+tabs <- lapply(tabs, as.data.frame)
+for (i in 1:2) {
+  tabs[[i]]$cat <- rownames(tabs[[i]])
+}
+names(tabs) <- c("MC", "KN")
+tab <- rbindlist(tabs, idcol = "Org")
+tab <- tab[order(tab$Org, tab$cat), c(1,10,2,6,3,7,4,8,5,9)]
+
+write.csv(tab, "output/gsea_kegg_results.csv", row.names = F)
+```
+
+Better combo plot
+```{r, fig.width = 10, fig.height = 8}
+# Combine GSEAs and make a summary plot
+plts <- lapply(gse_list, function(gses) {
+  # Sort by name
+  gse_dfs <- lapply(gses, function(x) x[order(x$ID), ])
+
+  nes <- sapply(gse_dfs, getElement, "NES")
+  dimnames(nes) <- list(gse_dfs[[1]]$Description, c("1d", "2d", "4d", "7d"))
+
+  qvals <- sapply(gse_dfs, getElement, "qvalue")
+  dimnames(qvals) <- dimnames(nes)
+
+  # Filter
+  keeps <- rowSums(qvals < 0.05) > 0
+
+  # Make sure all categories with significant pathways are included
+  keepcat <- rownames(nes) %in% unique(sub(" \\| .*", "", rownames(nes)[keeps]))
+
+  nes <- nes[keeps | keepcat, ]
+  qvals <- qvals[keeps | keepcat, ]
+
+  nes[qvals > 0.05] <- NA
+
+  # Longify
+  df <- reshape2::melt(nes)
+  colnames(df) <- c("cat", "time", "value")
+  df$cat <- factor(df$cat, levels = sort(as.character(unique(df$cat)), decreasing = T))
+
+  # Add horizontal lines to separate categories
+  names <- levels(df$cat)
+  needsline <- which(!grepl("\\|", names))
+  catlines <- lapply(needsline, function(i) {
+    geom_hline(yintercept = i + 0.5)
+  })
+
+  ggplot(df, aes(x = time, y = cat, fill = value)) +
+    geom_tile(color = "white") +
+    catlines +
+    theme_bw() +
+    scale_fill_gradientn(
+      colors = c('#364B9A', '#4A7BB7', '#6EA6CD', '#98CAE1', '#C2E4EF', 'white', 'white', '#FEDA8B', '#FDB366', '#F67E4B', '#DD3D2D', '#A50026'),
+      values = c(0, 0.1, 0.15, 0.2, 0.25, 0.3, 0.7, 0.75, 0.8, 0.85, 0.9, 1),
+      limits = c(-2.5, 2.5),
+      na.value = "white",
+      oob = scales::squish
+      ) +
+    scale_x_discrete(expand = c(0,0), labels = c(1,2,4,7)) +
+    scale_y_discrete(position = "right", 
+                     expand = c(0,0),
+                     breaks = levels(df$cat),
+                     labels = sub(".* \\|", "\U2014 ", levels(df$cat))) +
+    coord_equal(clip = "off") +
+    theme(legend.position = "bottom",
+          legend.justification = "left",
+          plot.title = element_markdown(size = 12),
+          axis.title.x = element_text(size = 10),
+          axis.text.y = element_text(face = ifelse(!grepl("\\|", names), "bold", "plain")),
+          legend.title = element_text(size = 10)) +
+    labs(x = "Days after\npulse feeding", y = NULL, fill = "Enrichment\nscore (NES)\nvs. Starved")
+})
+
+plts[[1]] <- plts[[1]] + labs(title = "*M. chamaeleon* macronucleus")
+plts[[2]] <- plts[[2]] + labs(title = "*S. major* kleptokaryon")
+
+plts[[1]] + plts[[2]] + guide_area() + 
+  plot_layout(
+    design = "aaab \n ##cb",
+    guides = "collect", ncol = 2)  
+  #plot_annotation(tag_levels = list(c("Macronucleus", "Kleptokaryon")))
+```
+
+```{r}
+sessionInfo()
+```

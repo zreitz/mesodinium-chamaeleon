@@ -1,0 +1,82 @@
+---
+title: "DESeq analysis vs starved as control"
+author: Zach
+date: "2025-08-20"
+output:
+  html_document
+---
+
+```{r, eval = FALSE, echo = FALSE}
+# For interactive
+setwd("code/3_deseq-gsea")
+```
+
+```{r}
+library(DESeq2)
+library(ggplot2)
+library(fgsea)
+```
+
+## Load data
+```{r}
+dds_list <- readRDS("../1_counts_processing/output/deseq_datasets.Rda")
+metadata <- readRDS("../1_counts_processing/output/metadata.Rda")
+kegg_ontology <- readRDS("../0_databases/output/kegg_ontology.Rda")
+kegg_lookup <- readRDS("../0_databases/output/kegg_lookup.Rda")
+
+timepoints <- c("1 d", "2 d", "4 d", "7 d")
+```
+
+## DESeq with starved as reference
+```{r}
+de_list <- lapply(dds_list, function(dds) {
+  dds$treatment <- relevel(dds$treatment, ref = "Starved")
+
+  dds <- DESeq(dds)
+
+  # For each in the time series, compute lfc
+  de_results <- lapply(resultsNames(dds)[2:5], function(x) {
+    lfcShrink(dds, coef = c(x))
+  })
+  names(de_results) <- levels(dds$treatment)[2:5]
+  de_results
+})
+
+# Extract LFC
+lfc_list <- lapply(de_list, function(de_results) {
+  lfc <- sapply(de_results, "[", , "log2FoldChange")
+  rownames(lfc) <- rownames(de_results[[1]])
+  lfc
+})
+```
+
+### Save LFC
+```{r}
+saveRDS(de_list, "output/deseq_vs_starved.Rda")
+saveRDS(lfc_list, "output/lfc_vs_starved.Rda")
+
+# For KEGG coloring
+write.table(lfc_list[[1]], file = "output/mc_lfc_vs_starved.txt", sep = " ", quote = F)
+write.table(lfc_list[[2]], file = "output/kn_lfc_vs_starved.txt", sep = " ", quote = F)
+```
+
+
+```{r}
+for (x in lfc_list) {
+  df <- reshape2::melt(x)
+  colnames(df) <- c("protein", "treatment", "lfc")
+
+  print(
+    ggplot(df, aes(x = lfc, color = treatment, group = treatment)) +
+      geom_density() +
+      theme_bw() +
+      scale_x_continuous(limits = c(-5, 5))
+  )
+  print(paste("Standard deviation:", sd(df$lfc)))
+}
+```
+
+
+```{r}
+sessionInfo()
+```

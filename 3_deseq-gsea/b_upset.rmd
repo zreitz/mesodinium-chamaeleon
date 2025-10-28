@@ -1,0 +1,137 @@
+---
+title: "UpSet plots and ORA based on expression patterns"
+author: Zach
+date: "2025-08-20"
+output:
+  html_document
+---
+
+```{r, eval = FALSE, echo = FALSE}
+# For interactive
+setwd("code/3_deseq-gsea")
+```
+
+```{r}
+library(DESeq2)
+library(ggplot2)
+library(fgsea)
+library(flextable)
+library(knitr)
+library(grid)
+```
+
+## Load data
+```{r}
+lfc_list <- readRDS("output/lfc_vs_starved.Rda")
+de_list <- readRDS("output/deseq_vs_starved.Rda")
+```
+
+## Upset plots
+```{r}
+# Grab p values
+pval_list <- lapply(de_list, function(de_results) {
+  padj <- sapply(de_results, "[", , "padj")
+  padj[is.na(padj)] <- 1
+  padj
+})
+
+sig_ups <- lapply(c("mc", "kn"), function(i) {
+  ifelse(pval_list[[i]] < 0.05 & lfc_list[[i]] > log2(1.2), 1, 0)
+})
+
+sig_downs <- lapply(c("mc", "kn"), function(i) {
+  ifelse(pval_list[[i]] < 0.05 & lfc_list[[i]] < -log2(1.2), 1, 0)
+})
+```
+
+## Fraction of genes up/down
+```{r}
+total <- sapply(sig_ups, nrow)
+up_nr <- as.data.frame(sapply(sig_ups, colSums))
+down_nr <- as.data.frame(sapply(sig_downs, colSums))
+flat <- as.data.frame(t(apply(up_nr + down_nr, 1, function(x) total - x)))
+
+up_nr$dir <- "up"
+down_nr$dir <- "down"
+flat$dir <- "flat"
+
+df <- rbind(up_nr, flat, down_nr)
+df$treatment <- factor(rownames(up_nr), levels = rev(c("7d", "4d", "2d", "1d")))
+df$dir <- factor(df$dir, levels = rev(c("down", "flat", "up")))
+
+# This code is awful
+df1 <- df[,c(1,3,4)]
+colnames(df1) <- c("count", "dir", "treatment")
+df1$org <- "Macronucleus"
+
+df2 <- df[,c(2,3,4)]
+colnames(df2) <- c("count", "dir", "treatment")
+df2$org <- "Kleptokaryon"
+
+df <- rbind(df1, df2)
+df$org <- factor(df$org, levels = c("Macronucleus", "Kleptokaryon"))
+
+heights = c("up" = 0.97, "flat" = 0.5, "down" = 0.03)
+df$height = heights[df$dir]
+
+ggplot(df, aes(x = treatment, y = count, fill = dir, label = count)) +
+  geom_bar(position = "fill", stat = "identity") +
+  geom_text(aes(y = height)) +
+  facet_wrap(vars(org)) +
+  scale_fill_manual(values = rev(c("#9ab2d6","#DDDDDD","#d28b93"))) +
+  scale_y_continuous(expand = c(0,0.01)) +
+  scale_x_discrete(labels = c(1,2,4,7)) +
+  labs(y = "Proportion of mapped KOs", x = "Days since pulse feeding", fill = "Direction") +
+  theme_bw() +
+  theme(aspect.ratio = 2.4)
+
+heights = c("up" = 0.97, "flat" = 0.5, "down" = 0.03)
+df$height = heights[df$dir]
+
+ggplot(df, aes(x = treatment, y = count, fill = dir, label = count)) +
+  geom_bar(position = "stack", stat = "identity") +
+  geom_text(aes(y = height)) +
+  facet_wrap(vars(org)) +
+  scale_fill_manual(values = rev(c("#9ab2d6","#DDDDDD","#d28b93"))) +
+  scale_y_continuous(expand = c(0,0.01)) +
+  scale_x_discrete(labels = c(1,2,4,7)) +
+  labs(y = "Proportion of mapped KOs", x = "Days since pulse feeding", fill = "Direction") +
+  theme_bw() +
+  theme(aspect.ratio = 2.4)
+```
+
+## Upset plots
+```{r, fig.width = 8, fig.height = 6}
+for (i in 1:2) {
+  plt <- UpSetR::upset(as.data.frame(sig_ups[[i]]),
+        sets = rev(names(de_list[[1]])),
+        keep.order = TRUE,
+        sets.x.label = "Upregulated KOs",
+        set_size.show = TRUE,
+        set_size.scale_max = 500,
+        mainbar.y.label = "Frequency of Combination",
+        point.size = 5, 
+        line.size = 1.5, 
+        text.scale = 2,
+        matrix.color = c("darkblue"))
+  plt
+
+  print(UpSetR::upset(as.data.frame(sig_downs[[i]]),
+        sets = rev(names(de_list[[1]])),
+        keep.order = TRUE,
+        sets.x.label = "Downregulated KOs",
+        set_size.show = TRUE,
+        set_size.scale_max = 500,
+        mainbar.y.label = "Frequency of Combination",
+        point.size = 5, 
+        line.size = 1.5, 
+        text.scale = 2,
+        matrix.color = c("darkblue")))
+}
+```
+
+
+
+```{r}
+sessionInfo()
+```

@@ -1,0 +1,13 @@
+fileUsed,libraryName,SampleId,rawReads,filteredReads,sampleName,conditionNumber,groupName,sequencerType,runType,countsFile
+52721.1.426934.ACCTCTGT-ACCTCTGT.filter-RNA.fastq.gz,NBXWP,298726,15648154,13395000,SM_100uE_Dark_A,1,SM_100uE_Dark,NovaSeq S4,2x151,5a-to-sm-ko-reps.fasta.sf
+52721.1.426934.ATGCCTGT-ATGCCTGT.filter-RNA.fastq.gz,NBXWW,298730,53503446,51657356,SM_10uE_Light_B,4,SM_10uE_Light,NovaSeq S4,2x151,6a-to-sm-ko-reps.fasta.sf
+52721.1.426934.CAGAGTGT-CAGAGTGT.filter-RNA.fastq.gz,NBXWN,298724,90291672,85634970,SM_100uE_Light_B,2,SM_100uE_Light,NovaSeq S4,2x151,1a-to-sm-ko-reps.fasta.sf
+52721.1.426934.CTTGCTGT-CTTGCTGT.filter-RNA.fastq.gz,NBXWT,298728,77071046,69656392,SM_100uE_Dark_C,1,SM_100uE_Dark,NovaSeq S4,2x151,2a-to-sm-ko-reps.fasta.sf
+52721.1.426934.GAAGTACC-GAAGTACC.filter-RNA.fastq.gz,NBXWX,298731,63589632,62036742,SM_10uE_Light_C,4,SM_10uE_Light,NovaSeq S4,2x151,7a-to-sm-ko-reps.fasta.sf
+52721.1.426934.GCCATAAC-GCCATAAC.filter-RNA.fastq.gz,NBXWU,298729,102016310,100521426,SM_10uE_Light_A,4,SM_10uE_Light,NovaSeq S4,2x151,3a-to-sm-ko-reps.fasta.sf
+52721.1.426934.GGATACCA-GGATACCA.filter-RNA.fastq.gz,NBXWO,298725,105258318,102539272,SM_100uE_Light_C,2,SM_100uE_Light,NovaSeq S4,2x151,8a-to-sm-ko-reps.fasta.sf
+52721.1.426934.GTTCAACC-GTTCAACC.filter-RNA.fastq.gz,NBXWH,298723,47378964,45014012,SM_100uE_Light_A,2,SM_100uE_Light,NovaSeq S4,2x151,9a-to-sm-ko-reps.fasta.sf
+52721.1.426934.TAGTGACC-TAGTGACC.filter-RNA.fastq.gz,NBXWZ,298733,76477936,69773590,SM_10uE_Dark_B,3,SM_10uE_Dark,NovaSeq S4,2x151,4a-to-sm-ko-reps.fasta.sf
+52721.1.426934.TGGATCAC-TGGATCAC.filter-RNA.fastq.gz,NBXWS,298727,31716352,30339386,SM_100uE_Dark_B,1,SM_100uE_Dark,NovaSeq S4,2x151,10a-to-sm-ko-reps.fasta.sf
+52721.1.426934.TGGCATGT-TGGCATGT.filter-RNA.fastq.gz,NBXXA,298734,21680196,21030590,SM_10uE_Dark_C,3,SM_10uE_Dark,NovaSeq S4,2x151,11a-to-sm-ko-reps.fasta.sf
+52731.2.430313.GCCTTGTT-GCCTTGTT.filter-RNA.fastq.gz,NGTXN,298732,67455972,66084410,SM_10uE_Dark_A,3,SM_10uE_Dark,NovaSeq S4,2x151,12a-to-sm-ko-reps.fasta.sf
